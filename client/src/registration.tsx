@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import "./Registration.css";
 
 interface RegistrationInputs {
     name: string;
@@ -28,28 +29,28 @@ export default function Registration() {
     }
 
     async function handleSubmit() {
-        console.log("Handle the submit");
+        console.log("Handle the submit, inputsValues:", inputsValues);
 
-        try {
-            const resp = await fetch("/registration.json", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(inputsValues),
-            });
+        // try {
+        //     const resp = await fetch("/registration.json", {
+        //         method: "POST",
+        //         headers: {
+        //             "Content-Type": "application/json",
+        //         },
+        //         body: JSON.stringify(inputsValues),
+        //     });
 
-            const data = await resp.json();
+        //     const data = await resp.json();
 
-            if (data.status === "Success") {
-                // location.replace("/");
-                // location.reload();
-            } else {
-                setError(true);
-            }
-        } catch {
-            setError(true);
-        }
+        //     if (data.status === "Success") {
+        //         // location.replace("/");
+        //         // location.reload();
+        //     } else {
+        //         setError(true);
+        //     }
+        // } catch {
+        //     setError(true);
+        // }
     }
 
     return (
@@ -60,7 +61,7 @@ export default function Registration() {
 
                 <p>
                     Registration ||
-                    <Link to="/login"> Log in </Link>
+                    {/* <Link to="/login"> Log in </Link> */}
                 </p>
                 <div className="error">
                     {error && <p>oops, something went wrong</p>}
