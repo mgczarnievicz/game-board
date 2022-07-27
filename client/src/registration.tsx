@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "./Registration.css";
+import validator from "validator";
 
 interface RegistrationInputs {
     name: string;
@@ -16,6 +17,8 @@ const initReg: RegistrationInputs = {
     password: "",
 };
 
+const optionValidatorEmpty = { ignore_whitespace: false };
+
 export default function Registration() {
     const [inputsValues, setInputsValues] =
         useState<RegistrationInputs>(initReg);
@@ -24,33 +27,47 @@ export default function Registration() {
     function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
         setInputsValues({
             ...inputsValues,
-            [event.target.name]: event.target.value,
+            [event.target.name]: event.target.value.trim(),
         });
     }
 
     async function handleSubmit() {
         console.log("Handle the submit, inputsValues:", inputsValues);
 
-        // try {
-        //     const resp = await fetch("/registration.json", {
-        //         method: "POST",
-        //         headers: {
-        //             "Content-Type": "application/json",
-        //         },
-        //         body: JSON.stringify(inputsValues),
-        //     });
+        // Lets Valid the input before sending them to the server.
+        if (
+            !validator.isEmail(inputsValues.email) ||
+            validator.isEmpty(inputsValues.name, optionValidatorEmpty) ||
+            validator.isEmpty(inputsValues.surname, optionValidatorEmpty) ||
+            validator.isEmpty(inputsValues.password, optionValidatorEmpty)
+        ) {
+            console.log("Error");
 
-        //     const data = await resp.json();
+            setError(true);
+        } else {
+            console.log("All inputs are valid");
 
-        //     if (data.status === "Success") {
-        //         // location.replace("/");
-        //         // location.reload();
-        //     } else {
-        //         setError(true);
-        //     }
-        // } catch {
-        //     setError(true);
-        // }
+            // try {
+            //     const resp = await fetch("/api/registration", {
+            //         method: "POST",
+            //         headers: {
+            //             "Content-Type": "application/json",
+            //         },
+            //         body: JSON.stringify(inputsValues),
+            //     });
+
+            //     const data = await resp.json();
+
+            //     if (data.status === "Success") {
+            //         // location.replace("/");
+            //         // location.reload();
+            //     } else {
+            //         setError(true);
+            //     }
+            // } catch {
+            //     setError(true);
+            // }
+        }
     }
 
     return (
@@ -66,37 +83,36 @@ export default function Registration() {
                 <div className="error">
                     {error && <p>oops, something went wrong</p>}
                 </div>
-                <form>
-                    <input
-                        type="text"
-                        name="name"
-                        placeholder="Name"
-                        onChange={handleChange}
-                        required
-                    ></input>
-                    <input
-                        type="text"
-                        name="surname"
-                        placeholder="Surname"
-                        onChange={handleChange}
-                        required
-                    ></input>
-                    <input
-                        type="email"
-                        name="email"
-                        placeholder="Email"
-                        onChange={handleChange}
-                        required
-                    ></input>
-                    <input
-                        type="password"
-                        name="password"
-                        placeholder="Password"
-                        onChange={handleChange}
-                        required
-                    ></input>
-                    <button onClick={handleSubmit}>Submit</button>
-                </form>
+
+                <input
+                    type="text"
+                    name="name"
+                    placeholder="Name"
+                    onChange={handleChange}
+                    required
+                ></input>
+                <input
+                    type="text"
+                    name="surname"
+                    placeholder="Surname"
+                    onChange={handleChange}
+                    required
+                ></input>
+                <input
+                    type="email"
+                    name="email"
+                    placeholder="Email@email.com"
+                    onChange={handleChange}
+                    required
+                ></input>
+                <input
+                    type="password"
+                    name="password"
+                    placeholder="Password"
+                    onChange={handleChange}
+                    required
+                ></input>
+                <button onClick={handleSubmit}>Submit</button>
             </div>
         </>
     );
