@@ -47,26 +47,26 @@ export default function Registration() {
         } else {
             console.log("All inputs are valid");
 
-            // try {
-            //     const resp = await fetch("/api/registration", {
-            //         method: "POST",
-            //         headers: {
-            //             "Content-Type": "application/json",
-            //         },
-            //         body: JSON.stringify(inputsValues),
-            //     });
+            try {
+                const resp = await fetch("/api/registration", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(inputsValues),
+                });
 
-            //     const data = await resp.json();
+                const data = await resp.json();
 
-            //     if (data.status === "Success") {
-            //         // location.replace("/");
-            //         // location.reload();
-            //     } else {
-            //         setError(true);
-            //     }
-            // } catch {
-            //     setError(true);
-            // }
+                if (data.status === "Success") {
+                    // location.replace("/");
+                    // location.reload();
+                } else {
+                    setError(true);
+                }
+            } catch {
+                setError(true);
+            }
         }
     }
 
