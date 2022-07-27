@@ -42,7 +42,6 @@ export default function Registration() {
             validator.isEmpty(inputsValues.password, optionValidatorEmpty)
         ) {
             console.log("Error");
-
             setError(true);
         } else {
             console.log("All inputs are valid");
@@ -59,6 +58,8 @@ export default function Registration() {
                 const data = await resp.json();
 
                 if (data.status === "Success") {
+                    console.log("Everything is success!");
+
                     // location.replace("/");
                     // location.reload();
                 } else {
