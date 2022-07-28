@@ -1,4 +1,5 @@
 import React from "react";
+import "./tictactoe.css";
 
 export default function Tictactoe() {
     return (

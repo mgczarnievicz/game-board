@@ -1,5 +1,5 @@
-import Registration from "./registration";
-import LogIn from "./login";
+import Registration from "./LogIn_Registration/registration";
+import LogIn from "./LogIn_Registration/login";
 // import ResetPassword from "./resetPassword";
 
 import { BrowserRouter, Route, Routes } from "react-router-dom";
