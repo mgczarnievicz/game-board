@@ -9,12 +9,16 @@ import Games from "./games";
 import { RootState } from "./redux/reducer";
 import { UserAlias } from "./typesClient";
 import Profile from "./profile/profile";
+import DisplayOnlineUsers from "./displayOnlineUsers";
 
 // import Registration from "./registration";
 
 function App() {
     const dispatch = useDispatch();
     const userInfo: UserAlias = useSelector((state: RootState) => state.user);
+    const showOnlineUsers: boolean = useSelector(
+        (state: RootState) => state.displayOnlineUsers
+    );
 
     useEffect(() => {
         (async () => {
@@ -62,7 +66,7 @@ function App() {
                 )}
                 <nav>
                     <Link to="/">Games</Link>
-                    <Link to="/friends">Friends</Link>
+                    <Link to="/friends">Points</Link>
                     <Link to="/chat">Chat</Link>
 
                     <Link to="/" onClick={logOutFunction}>
@@ -70,6 +74,8 @@ function App() {
                     </Link>
                 </nav>
             </header>
+
+            {showOnlineUsers && <DisplayOnlineUsers />}
 
             <Routes>
                 <Route path="/" element={<Games />}></Route>

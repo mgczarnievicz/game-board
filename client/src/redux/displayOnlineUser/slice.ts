@@ -5,11 +5,15 @@ interface ActionType {
 
 // typeof ProfileInfoWBio
 export default function displayOnlineUserReducer(
-    displayOnlineUsers: boolean = false,
+    displayOnlineUsers: boolean = true,
     action: ActionType
 ) {
     if (action.type === "/displayOnlineUsers/setStatus") {
         displayOnlineUsers = action.payload.status;
+
+        // action.payload
+        //     ? (displayOnlineUsers = action.payload.status as boolean)
+        //     : (displayOnlineUsers = false);
     }
 
     return displayOnlineUsers;
@@ -20,7 +24,7 @@ export default function displayOnlineUserReducer(
 ----------------------------------------------------------------------------------------------*/
 export function setDisplayOnlineUsers(status: boolean) {
     return {
-        type: `/displayOnlineUsers/setStatus`,
-        payload: status,
+        type: "/displayOnlineUsers/setStatus",
+        payload: { status },
     };
 }

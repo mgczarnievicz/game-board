@@ -1,8 +1,19 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { RootState } from "./redux/reducer";
+import DisplayOnlineUsers from "./displayOnlineUsers";
+import setDisplayOnlineUsers from "./redux/displayOnlineUser/slice";
 
 export default function Games() {
+    const dispatch = useDispatch();
+    const showOnlineUsers: boolean = useSelector(
+        (state: RootState) => state.displayOnlineUsers
+    );
+
     function linkToGo(linkToGo: string) {
+        // FIXME. TYPESCRIPT
+        // dispatch(setDisplayOnlineUsers(true));
         console.log("Clicked linkToGo", linkToGo);
     }
     return (
