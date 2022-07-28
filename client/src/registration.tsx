@@ -79,7 +79,7 @@ export default function Registration() {
 
                 <p>
                     Registration ||
-                    {/* <Link to="/login"> Log in </Link> */}
+                    <Link to="/login"> Log in </Link>
                 </p>
                 <div className="error">
                     {error && <p>oops, something went wrong</p>}

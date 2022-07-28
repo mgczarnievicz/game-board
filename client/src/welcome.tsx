@@ -2,7 +2,7 @@ import Registration from "./registration";
 import LogIn from "./login";
 // import ResetPassword from "./resetPassword";
 
-import { BrowserRouter, Route } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import React from "react";
 
 export default function Welcome() {
@@ -13,15 +13,13 @@ export default function Welcome() {
             </div>
             <BrowserRouter>
                 <div className="access-welcome">
-                    <Route path="/">
-                        <Registration />
-                    </Route>
-                    <Route path="/login">
-                        <LogIn />
-                    </Route>
-                    {/* <Route path="/resetPassword">
+                    <Routes>
+                        <Route path="/" element={<Registration />}></Route>
+                        <Route path="/login" element={<LogIn />}></Route>
+                        {/* <Route path="/resetPassword">
                         <ResetPassword />
                     </Route> */}
+                    </Routes>
                 </div>
             </BrowserRouter>
         </div>

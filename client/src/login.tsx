@@ -66,12 +66,12 @@ export default function LogIn() {
         <>
             <div>registration</div>
             <div className="form">
-                <h1>Join our community</h1>
+                <h1>Log In</h1>
 
                 <p>
-                    Registration ||
-                    {/* <Link to="/login"> Log in </Link> */}
+                    <Link to="/"> Registration </Link> || Log in
                 </p>
+
                 <div className="error">
                     {error && <p>oops, something went wrong</p>}
                 </div>
