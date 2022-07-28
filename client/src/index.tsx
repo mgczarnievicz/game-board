@@ -5,6 +5,8 @@ import { createStore, applyMiddleware } from "redux";
 import * as immutableState from "redux-immutable-state-invariant";
 import { Provider } from "react-redux";
 import { composeWithDevTools } from "@redux-devtools/extension";
+import { init } from "./socket";
+
 // import thunk from "redux-thunk";
 
 import rootReducer from "./redux/reducer";
@@ -33,7 +35,7 @@ fetch("api/user/id")
             root.render(<Welcome />);
         } else {
             // I want to initialize Websocket connection ans pass the store to it
-            // init(store);
+            init(store);
 
             root.render(
                 <React.StrictMode>

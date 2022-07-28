@@ -3,3 +3,8 @@ export interface UserAlias {
     alias: string;
     image_url: string;
 }
+
+export interface TictactoeType {
+    turn: UserAlias;
+    winner?: UserAlias | null;
+}

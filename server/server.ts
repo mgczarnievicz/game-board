@@ -164,7 +164,11 @@ app.get("/api/getUserInfo", (req, res) => {
                                 ALWAYS IN THE END!
 --------------------------------------------------------------------------------------- */
 
-app.listen(process.env.PORT || PORT, function () {
+// app.listen(process.env.PORT || PORT, function () {
+//     console.log(`server started at http://localhost:${PORT}`);
+// });
+
+server.listen(process.env.PORT || PORT, function () {
     console.log(`server started at http://localhost:${PORT}`);
 });
 
@@ -242,8 +246,9 @@ io.on("connection", function (socket: SocketWithSession) {
     /* ----------------------------------------------------
                     Chat
     -------------------------------------------------------*/
+    io.emit("testing-socket");
 
-    socket.on("chat-newest-message", (userIdToChat: number) => {
+    socket.on("tic-tac-toe-msg", (userIdToChat: number) => {
         console.log("BEFORE DB newest-privetMsg-chat", userIdToChat);
         // getMessage(userId, userIdToChat).then((result: Array<{}> | boolean) => {
         //     console.log("IN newest-message-chat", result);
