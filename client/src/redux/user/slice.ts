@@ -1,7 +1,7 @@
 import { Action, Dispatch } from "redux";
 import { ThunkAction } from "redux-thunk";
 import { RootState } from "./../reducer";
-import { AnyAction } from "redux";
+// import { AnyAction } from "redux";
 
 import { UserAlias } from "./../../typesClient";
 
