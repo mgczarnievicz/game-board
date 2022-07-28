@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import "./App.css";
-import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { Link, Route, Routes } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
-import { asyncReceiveUser } from "./redux/user/slice";
+import { userSetUser } from "./redux/user/slice";
 import TicTacToe from "./tictactoe/tictactoe";
 import Games from "./games";
 
@@ -13,13 +13,29 @@ function App() {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        let abort = false;
-        // FIXME TYPeSCRIPT ERROR
-        // dispatch(asyncReceiveUser(abort));
-        return () => {
-            abort = true;
-        };
-    }, []);
+        (async () => {
+            let abort = false;
+            try {
+                // handle fetch success
+                const respBody = await fetch("/api/getUserInfo");
+                const data = await respBody.json();
+                console.log("Data from /api/getUserInfo", data);
+
+                if (!abort) {
+                    return dispatch(userSetUser(data.payload));
+                } else {
+                    console.log("ignore don't run a a state update");
+                }
+            } catch (err) {
+                // handle fetch failure
+                console.log("Error", err);
+            }
+
+            return () => {
+                abort = true;
+            };
+        })();
+    });
 
     function logOutFunction() {
         fetch("/api/logout")

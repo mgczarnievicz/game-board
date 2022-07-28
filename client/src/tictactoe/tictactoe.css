@@ -1,9 +1,12 @@
 .tic-tac-toe-board {
-    display: flex;
-    flex-direction: column;
-    /* background-image: url(https://i.imgur.com/OVBsgc1.jpg); */
+    margin: 10px;
+    padding: 20px;
     border: 2px solid black;
     font-family: "Indie Flower", cursive;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .colum {
@@ -13,7 +16,6 @@
 .cell {
     width: 89px;
     height: 89px;
-    border: 1px solid lightgray;
     text-align: center;
     display: flex;
     justify-content: center;
@@ -21,14 +23,14 @@
     font-size: xxx-large;
     text-transform: capitalize;
     cursor: pointer;
-    color: white;
+    color: rgb(16, 14, 14);
     font-weight: 900;
 }
 .cell-b-button {
-    border-bottom: 1.5px solid black;
+    border-bottom: 2px solid black;
 }
 
 .cell-middle {
-    border-right: 1.5px solid black;
-    border-left: 1.5px solid black;
+    border-right: 2px solid black;
+    border-left: 2px solid black;
 }

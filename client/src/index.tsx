@@ -2,10 +2,10 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import reportWebVitals from "./reportWebVitals";
 import { createStore, applyMiddleware } from "redux";
-import { composeWithDevTools } from "@redux-devtools/extension";
 import * as immutableState from "redux-immutable-state-invariant";
 import { Provider } from "react-redux";
-import thunk from "redux-thunk";
+import { composeWithDevTools } from "@redux-devtools/extension";
+// import thunk from "redux-thunk";
 
 import rootReducer from "./redux/reducer";
 import "./index.css";
@@ -19,7 +19,7 @@ const root = ReactDOM.createRoot(
 
 const store = createStore(
     rootReducer,
-    composeWithDevTools(applyMiddleware(immutableState.default(), thunk))
+    composeWithDevTools(applyMiddleware(immutableState.default()))
 );
 
 fetch("api/user/id")
