@@ -74,7 +74,7 @@ export function getInfoOnlineUsers(
 ): Promise<QueryResult<UserAlias>> {
     return db.query(
         `SELECT id, user_id, alias, image_url FROM profile 
-        WHERE id=ANY($1);`,
+        WHERE user_id=ANY($1);`,
         [ids]
     );
 }

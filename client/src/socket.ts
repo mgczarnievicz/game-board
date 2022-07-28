@@ -26,6 +26,7 @@ export const init = (
     });
 
     socket.on("online-users", (newMsg: Array<UserAlias>) => {
+        console.log("online-users recevied", newMsg);
         store.dispatch(usersOnlineUpdate(newMsg));
     });
 };

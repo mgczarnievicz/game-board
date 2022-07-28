@@ -10,8 +10,12 @@ import "./displayOnlineUsers.css";
 
 export default function DisplayOnlineUsers() {
     const myUser: UserAlias = useSelector((state: RootState) => state.user);
-    const userOnline: Array<UserAlias> = useSelector(
-        (state: RootState) => state.onlineUsers
+    // const userOnline: Array<UserAlias> = useSelector(
+    //     (state: RootState) => state.onlineUsers
+    // );
+
+    const userOnline: Array<UserAlias> = useSelector((state: RootState) =>
+        state.onlineUsers?.filter((each) => each.user_id !== state.user.user_id)
     );
 
     function selectedUserToPlay(userId: number) {
