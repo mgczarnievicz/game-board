@@ -38,10 +38,8 @@ export function registerUser(
 //<UserLoggingIn | null>
 export function getUserByEmail(email: string): Promise<QueryResult<UserAlias>> {
     return db.query(
-        `SELECT profile.user_id, profile.alias, profile.image_url FROM profile
-            INNER JOIN users
-            ON profile.user_id = users.id
-            WHERE users.email = $1;`,
+        `SELECT id, email, password FROM users
+            WHERE users.email = $1 AND active=true;`,
         [email]
     );
 }
@@ -58,6 +56,16 @@ export function saveProfile(
     VALUES ($1, $2, null) RETURNING user_id, alias,image_url`;
 
     const param = [user_id, alias];
+    return db.query(q, param);
+}
+
+export function getProfileByUserId(
+    userId: number
+): Promise<QueryResult<UserAlias>> {
+    const q = `SELECT user_id, alias, image_url FROM profile
+    WHERE user_id= $1`;
+
+    const param = [userId];
     return db.query(q, param);
 }
 

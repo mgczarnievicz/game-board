@@ -4,7 +4,12 @@ import * as encryption from "./encryption";
 
 import { UserRegistration, LogInUser, UserAlias } from "./typesServer";
 
-import { registerUser, saveProfile, getUserByEmail } from "./db";
+import {
+    registerUser,
+    saveProfile,
+    getUserByEmail,
+    getProfileByUserId,
+} from "./db";
 
 // @ts-ignore
 // import animals from "animals";
@@ -70,7 +75,7 @@ function saveNewUserAndGenerateAlias(
         .then((dbResult: QueryResult) => {
             const user_id = dbResult.rows[0].id;
             const alias = animals();
-            console.log("Alias", alias, "\nuser_id", user_id);
+            // console.log("Alias", alias, "\nuser_id", user_id);
             return saveProfile(user_id, alias + "_" + user_id)
                 .then((result: QueryResult<UserAlias>) => result.rows[0])
                 .catch((err: QueryResult) => {
@@ -89,7 +94,7 @@ export function registerNewUser(
 ): Promise<boolean | UserAlias> {
     // First hash the pass.
     // then write in db.
-    console.log("In registerNewUser", newUser);
+    // console.log("In registerNewUser", newUser);
     return encryption
         .hash(newUser.password)
         .then((hashPass: string) => {
@@ -105,14 +110,20 @@ export function registerNewUser(
         });
 }
 
-export function logInVerify(userLogIn: LogInUser): Promise<UserAlias> {
+/* -----------------------------------------------------------------------
+                              LOG IN
+-------------------------------------------------------------------------*/
+export function logInVerify(
+    userLogIn: LogInUser
+): Promise<LogInUser | boolean> {
     userLogIn = cleanEmptySpaces<LogInUser>(userLogIn);
+    console.log();
     return getUserByEmail(userLogIn.email.toLowerCase())
         .then((result: QueryResult) => {
             // See what we recived and if there is a result, then se if its empty or not.
             if (result.rows.length === 0) {
                 console.log("Email not register");
-                return "Error";
+                return false;
             }
             return encryption
                 .compare(userLogIn.password, result.rows[0].password)
@@ -122,9 +133,25 @@ export function logInVerify(userLogIn: LogInUser): Promise<UserAlias> {
                         console.log("You Are In!");
                         return result.rows[0];
                     } else {
-                        return "Error";
+                        return false;
                     }
                 });
         })
         .catch((err: QueryResult) => err);
+}
+
+/* -----------------------------------------------------------------------
+                               GET USER INFO
+-------------------------------------------------------------------------*/
+export function getUserInfo(userId: number): Promise<boolean | UserAlias> {
+    console.log("Process GetUser Info id", userId);
+    return getProfileByUserId(userId)
+        .then((result: QueryResult) => {
+            console.log("getUserInfo result.rows", result.rows);
+            return result.rows[0];
+        })
+        .catch((err: QueryResult) => {
+            console.log("Error in getUserInfo", err);
+            return false;
+        });
 }

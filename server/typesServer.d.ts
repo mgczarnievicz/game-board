@@ -12,6 +12,7 @@ export interface UserAlias {
 }
 
 export interface LogInUser {
+    id?: number;
     email: string;
     password: string;
 }

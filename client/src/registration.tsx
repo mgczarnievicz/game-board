@@ -56,12 +56,13 @@ export default function Registration() {
                 });
 
                 const data = await resp.json();
+                console.log("Data form server in registration data", data);
 
                 if (data.status === "Success") {
                     console.log("Everything is success!");
-
+                    // eslint-disable-next-line no-restricted-globals
+                    location.reload();
                     // location.replace("/");
-                    // location.reload();
                 } else {
                     setError(true);
                 }
@@ -73,7 +74,6 @@ export default function Registration() {
 
     return (
         <>
-            <div>registration</div>
             <div className="form">
                 <h1>Join our community</h1>
 

@@ -16,11 +16,6 @@ import { BrowserRouter } from "react-router-dom";
 const root = ReactDOM.createRoot(
     document.getElementById("root") as HTMLElement
 );
-// root.render(
-//     <React.StrictMode>
-//         <App />
-//     </React.StrictMode>
-// );
 
 const store = createStore(
     rootReducer,
@@ -30,20 +25,16 @@ const store = createStore(
 fetch("api/user/id")
     .then((response) => response.json())
     .then((data) => {
+        console.log("Data received from server:", data);
+
         if (!data.userId) {
+            console.log("data.userId", data.userId);
+
             root.render(<Welcome />);
         } else {
             // I want to initialize Websocket connection ans pass the store to it
             // init(store);
-            // ReactDOM.render(
-            //     <Provider store={store}>
-            //         <App />
-            //     </Provider>,
-            //     document.querySelector("main")
-            // );
-            // const root = ReactDOM.createRoot(
-            //     document.getElementById("root") as HTMLElement
-            // );store={store}
+
             root.render(
                 <React.StrictMode>
                     <Provider store={store}>

@@ -1,6 +1,7 @@
 import { Action, Dispatch } from "redux";
 import { ThunkAction } from "redux-thunk";
 import { RootState } from "./../reducer";
+import { AnyAction } from "redux";
 
 import { UserAlias } from "./../../typesClient";
 
@@ -79,27 +80,26 @@ type UserThunk = ThunkAction<void, RootState, null, Action<ActionType>>;
       that must have a `type` field.) Action type is defined in the redux typings.
   */
 
-// export const asyncReceiveUser =
-//     (abort: boolean): UserThunk =>
-//     async (dispatch: Dispatch) => {
-//         console.log("I am in asyncReceiveUser");
-//         try {
-//             // handle fetch success
-//             // REVIEW: Need to send the bio as array!
-//             const respBody = await fetch("/getUserInfo.json");
-//             const data = await respBody.json();
-//             console.log("Data from /getUserInfo.json", data);
+export const asyncReceiveUser =
+    (abort: boolean): UserThunk =>
+    async (dispatch: Dispatch) => {
+        console.log("I am in asyncReceiveUser");
+        try {
+            // handle fetch success
+            const respBody = await fetch("/api/getUserInfo");
+            const data = await respBody.json();
+            console.log("Data from /api/getUserInfo", data);
 
-//             if (!abort) {
-//                 return dispatch({
-//                     type: `/userInfo/receive`,
-//                     payload: { ...data.payload },
-//                 });
-//             } else {
-//                 console.log("ignore don't run a a state update");
-//             }
-//         } catch (err) {
-//             // handle fetch failure
-//             console.log("Error", err);
-//         }
-//     };
+            if (!abort) {
+                return dispatch({
+                    type: `/userInfo/receive`,
+                    payload: { ...data.payload },
+                });
+            } else {
+                console.log("ignore don't run a a state update");
+            }
+        } catch (err) {
+            // handle fetch failure
+            console.log("Error", err);
+        }
+    };

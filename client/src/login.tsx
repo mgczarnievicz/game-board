@@ -52,7 +52,8 @@ export default function LogIn() {
 
                 if (data.status === "Success") {
                     console.log("Everything is success!");
-                    // location.replace("/");
+                    // eslint-disable-next-line no-restricted-globals
+                    location.replace("/");
                 } else {
                     setError(true);
                 }
@@ -64,7 +65,6 @@ export default function LogIn() {
 
     return (
         <>
-            <div>registration</div>
             <div className="form">
                 <h1>Log In</h1>
 
