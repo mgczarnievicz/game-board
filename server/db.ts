@@ -69,4 +69,14 @@ export function getProfileByUserId(
     return db.query(q, param);
 }
 
+export function getInfoOnlineUsers(
+    ids: Array<string>
+): Promise<QueryResult<UserAlias>> {
+    return db.query(
+        `SELECT id, user_id, alias, image_url FROM profile 
+        WHERE id=ANY($1);`,
+        [ids]
+    );
+}
+
 // export { registerUser, getUserByEmail };

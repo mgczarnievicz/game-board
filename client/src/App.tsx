@@ -1,16 +1,20 @@
 import React, { useEffect } from "react";
 import "./App.css";
 import { Link, Route, Routes } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { userSetUser } from "./redux/user/slice";
 import TicTacToe from "./tictactoe/tictactoe";
 import Games from "./games";
+import { RootState } from "./redux/reducer";
+import { UserAlias } from "./typesClient";
+import Profile from "./profile/profile";
 
 // import Registration from "./registration";
 
 function App() {
     const dispatch = useDispatch();
+    const userInfo: UserAlias = useSelector((state: RootState) => state.user);
 
     useEffect(() => {
         (async () => {
@@ -35,7 +39,7 @@ function App() {
                 abort = true;
             };
         })();
-    });
+    }, []);
 
     function logOutFunction() {
         fetch("/api/logout")
@@ -51,6 +55,11 @@ function App() {
         <div className="App">
             {/* <BrowserRouter> */}
             <header className="App-header">
+                {userInfo && (
+                    <>
+                        <Profile user={userInfo} />
+                    </>
+                )}
                 <nav>
                     <Link to="/">Games</Link>
                     <Link to="/friends">Friends</Link>

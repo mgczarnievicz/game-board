@@ -1,0 +1,20 @@
+import React from "react";
+import "./profile.css";
+
+import { UserAlias } from "../typesClient";
+
+interface PropsProfile {
+    user: UserAlias;
+}
+
+export default function Profile(props: PropsProfile) {
+    return (
+        <div className="profile">
+            <img
+                src={props.user.image_url || require("../img/Oso.png")}
+                alt={props.user.alias}
+            ></img>
+            <h3>{props.user.alias}</h3>
+        </div>
+    );
+}

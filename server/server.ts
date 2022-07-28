@@ -10,6 +10,8 @@ import { UserRegistration, LogInUser, UserAlias } from "./typesServer";
 
 import { registerNewUser, getUserInfo, logInVerify } from "./process";
 
+import { getInfoOnlineUsers } from "./db";
+
 const PORT = 8080;
 const app = express();
 const server = require("http").Server(app);
@@ -191,6 +193,33 @@ interface UserOnline {
 // UsersOnlineInfo;
 const userOnline: UserOnline = {};
 
+/* 
+const CONNECT_4_GAMES = {
+    "23ldfs0l": {
+        players: [{id:7, player: 1}, {id: 11, player: 2}]
+        state: [
+            [0, 0, 1, 0, 2, 0],
+            [0, 0, 1, 0, 2, 0],
+            [0, 0, 1, 0, 2, 0],
+            [0, 0, 1, 0, 2, 0],
+            [1, 0, 1, 0, 2, 0],
+        ]
+    }
+}
+
+UserPlaying{
+    id: number,
+    player:number 1|2
+}
+
+game = {
+    players: Array<>
+    ticTacToe_Board = [[],[],[]]
+}
+
+*/
+const Boards = {};
+
 io.on("connection", function (socket: SocketWithSession) {
     if (!socket.request.session.userId) {
         // Here I have to go through my userSocket and delete the connection.
@@ -202,9 +231,9 @@ io.on("connection", function (socket: SocketWithSession) {
         const onlineUsers = Object.keys(userOnline);
         try {
             console.log("listOnlineUsers", onlineUsers);
-            // const resp: QueryResult = await getInfoOnlineUsers(onlineUsers);
-            // console.log("InfoOnlineUsers", resp.rows);
-            // io.emit("online-users", resp.rows);
+            const resp: QueryResult = await getInfoOnlineUsers(onlineUsers);
+            console.log("InfoOnlineUsers", resp.rows);
+            io.emit("online-users", resp.rows);
         } catch (err) {
             console.log("Error InfoOnlineUsers", err);
         }
@@ -247,6 +276,18 @@ io.on("connection", function (socket: SocketWithSession) {
                     Chat
     -------------------------------------------------------*/
     io.emit("testing-socket");
+
+    socket.on("invite-to-play", (userIdToChat: number) => {
+        // Is better to send my info so I can send it to the other user.
+        console.log("You invited other User to play.", userIdToChat);
+        // getMessage(userId, userIdToChat).then((result: Array<{}> | boolean) => {
+        //     console.log("IN newest-message-chat", result);
+        //     if (result) {
+        //         //I send it back to whom it asked.
+        //         socket.emit("chat-newest-message", result);
+        //     }
+        // });
+    });
 
     socket.on("tic-tac-toe-msg", (userIdToChat: number) => {
         console.log("BEFORE DB newest-privetMsg-chat", userIdToChat);
