@@ -1,9 +1,12 @@
 import { Store } from "redux";
 import { io, Socket } from "socket.io-client";
+
 import { ticTacToeNextTurn } from "./redux/tictactoe/slice";
 import { usersOnlineUpdate } from "./redux/usersOnline/slice";
+import { setReceivedInvite } from "./redux/receivedInvite/slice";
 
 import { TictactoeType, UserAlias, InviteMsg } from "./typesClient";
+import { RootState } from "./redux/reducer";
 
 export let socket: Socket;
 
@@ -30,7 +33,20 @@ export const init = (
         store.dispatch(usersOnlineUpdate(newMsg));
     });
 
-    socket.on("accept-invite-to-play", (newMsg: InviteMsg) => {
-        console.log("Received accept-invite-to-play:", newMsg);
+    socket.on("received-invite-to-play", (newMsg: InviteMsg) => {
+        console.log("Received received-invite-to-play:", newMsg);
+        // If I am not playing a game reject the invite.
+        const state: RootState = store.getState();
+
+        if (state.receivedInvite && state.playingGame) {
+            // Reject the Invite
+            // set the Invite GB to null.
+            console.log("I am playing");
+            socket.emit("reject-invite-to-play");
+        } else {
+            store.dispatch(setReceivedInvite(newMsg));
+        }
+
+        console.log("state in received-invite-to-play", state);
     });
 };

@@ -21,7 +21,7 @@ export default function DisplayOnlineUsers() {
     function selectedUserToPlay(otherUser: UserAlias) {
         console.log("I clicked in an online User:", otherUser);
 
-        socket.emit("invitation-to-play", {
+        socket.emit("send-invite-to-play", {
             to: otherUser,
             from: myUser,
             game_name: "I have to put it here",

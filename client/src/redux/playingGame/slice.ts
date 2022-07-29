@@ -4,27 +4,27 @@ interface ActionType {
 }
 
 // typeof ProfileInfoWBio
-export default function displayOnlineUserReducer(
-    displayOnlineUsers: boolean = false,
+export default function playingGameReducer(
+    playingGame: boolean = false,
     action: ActionType
 ) {
-    if (action.type === "/displayOnlineUsers/setStatus") {
-        displayOnlineUsers = action.payload.status;
+    if (action.type === "/playingGame/setStatus") {
+        playingGame = action.payload.status;
 
         // action.payload
         //     ? (displayOnlineUsers = action.payload.status as boolean)
         //     : (displayOnlineUsers = false);
     }
 
-    return displayOnlineUsers;
+    return playingGame;
 }
 
 /* -------------------------------------------------------------------------------------------
                                     ACTION
 ----------------------------------------------------------------------------------------------*/
-export function setDisplayOnlineUsers(status: boolean) {
+export function setPlayingGame(status: boolean) {
     return {
-        type: "/displayOnlineUsers/setStatus",
+        type: "/playingGame/setStatus",
         payload: { status },
     };
 }

@@ -283,12 +283,12 @@ io.on("connection", function (socket: SocketWithSession) {
     -------------------------------------------------------*/
     io.emit("testing-socket");
 
-    socket.on("invitation-to-play", (inviteMsg: InviteMsg) => {
+    socket.on("send-invite-to-play", (inviteMsg: InviteMsg) => {
         // Is better to send my info so I can send it to the other user.
         console.log("You invited other User to play.", inviteMsg);
 
         userOnline[inviteMsg.to.user_id].map((eachSocket) => {
-            io.to(eachSocket).emit("accept-invite-to-play", inviteMsg);
+            io.to(eachSocket).emit("received-invite-to-play", inviteMsg);
         });
     });
 

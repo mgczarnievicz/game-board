@@ -7,9 +7,11 @@ import { userSetUser } from "./redux/user/slice";
 import TicTacToe from "./tictactoe/tictactoe";
 import Games from "./games";
 import { RootState } from "./redux/reducer";
-import { UserAlias } from "./typesClient";
+import { UserAlias, InviteMsg } from "./typesClient";
 import Profile from "./profile/profile";
 import DisplayOnlineUsers from "./DisplayOnlineUsers/displayOnlineUsers";
+import { setDisplayOnlineUsers } from "./redux/displayOnlineUser/slice";
+import Invite from "./Invite/invite";
 
 // import Registration from "./registration";
 
@@ -18,6 +20,13 @@ function App() {
     const userInfo: UserAlias = useSelector((state: RootState) => state.user);
     const showOnlineUsers: boolean = useSelector(
         (state: RootState) => state.displayOnlineUsers
+    );
+
+    const receivedInvite: InviteMsg | null = useSelector(
+        (state: RootState) => state.receivedInvite
+    );
+    const playingGame: boolean = useSelector(
+        (state: RootState) => state.playingGame
     );
 
     useEffect(() => {
@@ -55,6 +64,11 @@ function App() {
                 }
             });
     }
+
+    function goToGameBoard() {
+        // If I go to gameBoard I abandon the game I was Playing.
+        dispatch(setDisplayOnlineUsers(false));
+    }
     return (
         <div className="App">
             {/* <BrowserRouter> */}
@@ -65,7 +79,9 @@ function App() {
                     </>
                 )}
                 <nav>
-                    <Link to="/">Games</Link>
+                    <Link to="/" onClick={goToGameBoard}>
+                        Games
+                    </Link>
                     <Link to="/friends">Points</Link>
                     <Link to="/chat">Chat</Link>
 
@@ -76,6 +92,7 @@ function App() {
             </header>
 
             {showOnlineUsers && <DisplayOnlineUsers />}
+            {receivedInvite && <Invite />}
 
             <Routes>
                 <Route path="/" element={<Games />}></Route>
