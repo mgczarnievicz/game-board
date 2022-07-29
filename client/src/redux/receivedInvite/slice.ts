@@ -18,6 +18,15 @@ export default function receivedInviteReducer(
         // receivedInvite = action.payload;
     }
 
+    if (action.type === "/receivedInvite/clearStatus") {
+        receivedInvite = { ...receivedInvite, ...action.payload };
+        receivedInvite = null;
+        // action.payload
+        //     ? (receivedInvite = action.payload as InviteMsg)
+        //     : (receivedInvite = null);
+        // receivedInvite = action.payload;
+    }
+
     return receivedInvite;
 }
 
@@ -27,6 +36,13 @@ export default function receivedInviteReducer(
 export function setReceivedInvite(invite: InviteMsg) {
     return {
         type: "/receivedInvite/setStatus",
-        payload: { invite },
+        payload: invite,
+    };
+}
+
+export function clearReceivedInvite() {
+    return {
+        type: "/receivedInvite/clearStatus",
+        payload: { invite: null },
     };
 }

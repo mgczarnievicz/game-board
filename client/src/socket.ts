@@ -42,7 +42,7 @@ export const init = (
             // Reject the Invite
             // set the Invite GB to null.
             console.log("I am playing");
-            socket.emit("reject-invite-to-play");
+            socket.emit("reject-invite-to-play", newMsg);
         } else {
             store.dispatch(setReceivedInvite(newMsg));
         }

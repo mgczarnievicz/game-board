@@ -216,9 +216,29 @@ game = {
     players: Array<>
     ticTacToe_Board = [[],[],[]]
 }
-
 */
-const Boards = {};
+
+/*........................................................................... 
+                            GAMES TYPES
+...........................................................................*/
+type TicTacToeType = Array<Array<number>>;
+
+type GameType = TicTacToeType;
+
+interface BoardsType {
+    [key: string]: {
+        players: Array<{ id: number; player: number }>;
+        game: string;
+        state: GameType;
+    };
+}
+const Boards: BoardsType = {};
+
+const initTictacToe: TicTacToeType = [
+    [0, 0, 0],
+    [0, 0, 0],
+    [0, 0, 0],
+];
 
 interface InviteMsg {
     to: UserAlias;
@@ -292,9 +312,39 @@ io.on("connection", function (socket: SocketWithSession) {
         });
     });
 
-    socket.on("accept-invite-to-play", () => {
+    socket.on("accept-invite-to-play", (inviteMsg: InviteMsg) => {
         console.log(
-            "The other player accepted my invite. Create room chat and let know the players to start playing"
+            "The other player accepted my invite. Create room chat and let know the players to start playing",
+            inviteMsg
+        );
+        // we join the room.
+        const roomName = inviteMsg.from.alias + inviteMsg.to.alias;
+        // to -> is the one responding
+        socket.join(roomName);
+            
+        // The other Player Socket to join the room
+        userOnline[inviteMsg.from.user_id].map((eachSocket) => {
+            // io.to(eachSocket).emit("received-invite-to-play", inviteMsg);
+            // FIXME!!!!!!!
+            io.to(eachSocket).join(roomName);
+        });
+
+        Boards[roomName].players[0].id = inviteMsg.from.user_id;
+        Boards[roomName].players[0].player = 1;
+
+        Boards[roomName].players[1].id = inviteMsg.to.user_id;
+        Boards[roomName].players[0].player = 2;
+
+        Boards[roomName].game = inviteMsg.game_name;
+        Boards[roomName].state = initTictacToe;
+    });
+
+    console.log("Lets see the games that are on!", Boards);
+
+    socket.on("reject-invite-to-play", (inviteMsg: InviteMsg) => {
+        console.log(
+            "The other player REJECT my invite. Let the other Player KNOW",
+            inviteMsg
         );
     });
 
