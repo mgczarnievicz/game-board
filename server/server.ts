@@ -220,6 +220,12 @@ game = {
 */
 const Boards = {};
 
+interface InviteMsg {
+    to: UserAlias;
+    from: UserAlias;
+    game_name: string;
+}
+
 io.on("connection", function (socket: SocketWithSession) {
     if (!socket.request.session.userId) {
         // Here I have to go through my userSocket and delete the connection.
@@ -277,16 +283,19 @@ io.on("connection", function (socket: SocketWithSession) {
     -------------------------------------------------------*/
     io.emit("testing-socket");
 
-    socket.on("invite-to-play", (userIdToChat: number) => {
+    socket.on("invitation-to-play", (inviteMsg: InviteMsg) => {
         // Is better to send my info so I can send it to the other user.
-        console.log("You invited other User to play.", userIdToChat);
-        // getMessage(userId, userIdToChat).then((result: Array<{}> | boolean) => {
-        //     console.log("IN newest-message-chat", result);
-        //     if (result) {
-        //         //I send it back to whom it asked.
-        //         socket.emit("chat-newest-message", result);
-        //     }
-        // });
+        console.log("You invited other User to play.", inviteMsg);
+
+        userOnline[inviteMsg.to.user_id].map((eachSocket) => {
+            io.to(eachSocket).emit("accept-invite-to-play", inviteMsg);
+        });
+    });
+
+    socket.on("accept-invite-to-play", () => {
+        console.log(
+            "The other player accepted my invite. Create room chat and let know the players to start playing"
+        );
     });
 
     socket.on("tic-tac-toe-msg", (userIdToChat: number) => {
@@ -299,6 +308,12 @@ io.on("connection", function (socket: SocketWithSession) {
         //     }
         // });
     });
+
+    // socket.on("invitation-to-play", (invitation) => {
+    //     console.log("Invitation received", invitation);
+    //     // Here I will have to send a message to the other user. If the user Accept then create the
+    //     // room and both users can play.
+    // });
 
     socket.on(
         "chat-new-message",

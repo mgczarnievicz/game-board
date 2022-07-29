@@ -8,3 +8,9 @@ export interface TictactoeType {
     turn: UserAlias;
     winner?: UserAlias | null;
 }
+
+export interface InviteMsg {
+    to: UserAlias;
+    from: UserAlias;
+    game_name: string;
+}

@@ -9,7 +9,7 @@ import Games from "./games";
 import { RootState } from "./redux/reducer";
 import { UserAlias } from "./typesClient";
 import Profile from "./profile/profile";
-import DisplayOnlineUsers from "./displayOnlineUsers";
+import DisplayOnlineUsers from "./DisplayOnlineUsers/displayOnlineUsers";
 
 // import Registration from "./registration";
 

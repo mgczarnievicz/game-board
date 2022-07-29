@@ -3,7 +3,7 @@ import { io, Socket } from "socket.io-client";
 import { ticTacToeNextTurn } from "./redux/tictactoe/slice";
 import { usersOnlineUpdate } from "./redux/usersOnline/slice";
 
-import { TictactoeType, UserAlias } from "./typesClient";
+import { TictactoeType, UserAlias, InviteMsg } from "./typesClient";
 
 export let socket: Socket;
 
@@ -28,5 +28,9 @@ export const init = (
     socket.on("online-users", (newMsg: Array<UserAlias>) => {
         console.log("online-users recevied", newMsg);
         store.dispatch(usersOnlineUpdate(newMsg));
+    });
+
+    socket.on("accept-invite-to-play", (newMsg: InviteMsg) => {
+        console.log("Received accept-invite-to-play:", newMsg);
     });
 };

@@ -2,7 +2,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { RootState } from "./redux/reducer";
-import DisplayOnlineUsers from "./displayOnlineUsers";
+import DisplayOnlineUsers from "./DisplayOnlineUsers/displayOnlineUsers";
 import setDisplayOnlineUsers from "./redux/displayOnlineUser/slice";
 
 export default function Games() {

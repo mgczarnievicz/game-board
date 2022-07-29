@@ -12,6 +12,9 @@ const initUser: UserAlias = {
 
 export default function TicTacToe() {
     const myUser = useSelector((state: RootState) => state.user);
+    const otherPlayerIsSelected = useSelector(
+        (state: RootState) => state.displayOnlineUsers
+    );
 
     const [winner, setWinner] = useState(null);
     const [turn, setTurn] = useState<UserAlias>(initUser);
@@ -34,6 +37,11 @@ export default function TicTacToe() {
             " index:",
             index
         );
+
+        if (!otherPlayerIsSelected) {
+            console.log("I have tu ignore the clicked. Please select a Player");
+            return;
+        }
 
         // if (turn.user_id === myUser.user_id) {
         //     // Its my turn.
