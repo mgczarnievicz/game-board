@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import "./Registration.css";
 import validator from "validator";
 
@@ -16,6 +16,7 @@ const initReg: LogInInputs = {
 const optionValidatorEmpty = { ignore_whitespace: false };
 
 export default function LogIn() {
+    let navigate = useNavigate();
     const [inputsValues, setInputsValues] = useState<LogInInputs>(initReg);
     const [error, setError] = useState<boolean>(false);
 
@@ -53,7 +54,8 @@ export default function LogIn() {
                 if (data.status === "Success") {
                     console.log("Everything is success!");
                     // eslint-disable-next-line no-restricted-globals
-                    location.replace("/");
+                    // location.replace("/");
+                    navigate("/");
                 } else {
                     setError(true);
                 }
@@ -94,4 +96,7 @@ export default function LogIn() {
             </div>
         </>
     );
+}
+function useHistory() {
+    throw new Error("Function not implemented.");
 }

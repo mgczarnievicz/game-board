@@ -225,14 +225,26 @@ type TicTacToeType = Array<Array<number>>;
 
 type GameType = TicTacToeType;
 
+interface Game {
+    players: Array<{ id: number; player: number }>;
+    game: string;
+    state: GameType;
+}
+
 interface BoardsType {
-    [key: string]: {
-        players: Array<{ id: number; player: number }>;
-        game: string;
-        state: GameType;
-    };
+    [key: string]: Game;
 }
 const Boards: BoardsType = {};
+
+// REVIEW See how to do the players dynamic 1 or 2
+const initGame: Game = {
+    players: [
+        { id: null, player: 1 },
+        { id: null, player: 2 },
+    ],
+    game: "",
+    state: null,
+};
 
 const initTictacToe: TicTacToeType = [
     [0, 0, 0],
@@ -240,10 +252,18 @@ const initTictacToe: TicTacToeType = [
     [0, 0, 0],
 ];
 
+const gameStatus = {
+    1: "turn",
+    2: "quit",
+    3: "winner",
+    4: "tie",
+};
+
 interface InviteMsg {
     to: UserAlias;
     from: UserAlias;
     game_name: string;
+    room_name?: string;
 }
 
 io.on("connection", function (socket: SocketWithSession) {
@@ -299,13 +319,18 @@ io.on("connection", function (socket: SocketWithSession) {
     console.log("Mi list of connection", userOnline);
 
     /* ----------------------------------------------------
-                    Chat
+                    Play Games - 2 player
     -------------------------------------------------------*/
     io.emit("testing-socket");
 
     socket.on("send-invite-to-play", (inviteMsg: InviteMsg) => {
-        // Is better to send my info so I can send it to the other user.
-        console.log("You invited other User to play.", inviteMsg);
+        // we join the room.
+        const roomName = inviteMsg.from.alias + inviteMsg.to.alias;
+        inviteMsg.room_name = roomName;
+        console.log(
+            "You invited other User to play. set the room name",
+            inviteMsg
+        );
 
         userOnline[inviteMsg.to.user_id].map((eachSocket) => {
             io.to(eachSocket).emit("received-invite-to-play", inviteMsg);
@@ -318,27 +343,46 @@ io.on("connection", function (socket: SocketWithSession) {
             inviteMsg
         );
         // we join the room.
-        const roomName = inviteMsg.from.alias + inviteMsg.to.alias;
+        const roomName = inviteMsg.room_name;
         // to -> is the one responding
         socket.join(roomName);
-            
+
         // The other Player Socket to join the room
         userOnline[inviteMsg.from.user_id].map((eachSocket) => {
             // io.to(eachSocket).emit("received-invite-to-play", inviteMsg);
             // FIXME!!!!!!!
-            io.to(eachSocket).join(roomName);
+            io.to(eachSocket).emit("invite-accepted-join-room", inviteMsg);
+            // async () => {
+            //     const otherSocket = await io.in(eachSocket).fetchSockets();
+            //     otherSocket.join(roomName);
+            // };
         });
 
+        // socket.to(roomName).emit("start-game");
+
+        // async () => {
+        //     const sockets = await io.in(roomName).fetchSockets();
+        //     for (const socket of sockets) {
+        //         console.log(socket.id);
+        //         console.log(socket.rooms);
+        //     }
+        // };
+    });
+
+    socket.on("invite-accepted-join-room", (inviteMsg: InviteMsg) => {
+        console.log("invite-accepted-join-room, inviteMsg:", inviteMsg);
+        const roomName = inviteMsg.room_name;
+        Boards[roomName] = initGame;
+        console.log("log Boards", Boards);
         Boards[roomName].players[0].id = inviteMsg.from.user_id;
-        Boards[roomName].players[0].player = 1;
 
         Boards[roomName].players[1].id = inviteMsg.to.user_id;
-        Boards[roomName].players[0].player = 2;
 
         Boards[roomName].game = inviteMsg.game_name;
         Boards[roomName].state = initTictacToe;
-    });
 
+        socket.to(roomName).emit("start-game");
+    });
     console.log("Lets see the games that are on!", Boards);
 
     socket.on("reject-invite-to-play", (inviteMsg: InviteMsg) => {

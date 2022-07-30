@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import "./Registration.css";
 import validator from "validator";
 
@@ -20,6 +20,7 @@ const initReg: RegistrationInputs = {
 const optionValidatorEmpty = { ignore_whitespace: false };
 
 export default function Registration() {
+    const navigate = useNavigate();
     const [inputsValues, setInputsValues] =
         useState<RegistrationInputs>(initReg);
     const [error, setError] = useState<boolean>(false);
@@ -61,7 +62,8 @@ export default function Registration() {
                 if (data.status === "Success") {
                     console.log("Everything is success!");
                     // eslint-disable-next-line no-restricted-globals
-                    location.reload();
+                    // location.reload();
+                    navigate(0);
                     // location.replace("/");
                 } else {
                     setError(true);

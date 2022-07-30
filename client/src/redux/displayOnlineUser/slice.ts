@@ -28,3 +28,10 @@ export function setDisplayOnlineUsers(status: boolean) {
         payload: { status },
     };
 }
+
+export function clearDisplayOnlineUsers() {
+    return {
+        type: "/displayOnlineUsers/setStatus",
+        payload: { status: false },
+    };
+}

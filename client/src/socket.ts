@@ -4,6 +4,7 @@ import { io, Socket } from "socket.io-client";
 import { ticTacToeNextTurn } from "./redux/tictactoe/slice";
 import { usersOnlineUpdate } from "./redux/usersOnline/slice";
 import { setReceivedInvite } from "./redux/receivedInvite/slice";
+import { clearDisplayOnlineUsers } from "./redux/displayOnlineUser/slice";
 
 import { TictactoeType, UserAlias, InviteMsg } from "./typesClient";
 import { RootState } from "./redux/reducer";
@@ -48,5 +49,19 @@ export const init = (
         }
 
         console.log("state in received-invite-to-play", state);
+    });
+
+    socket.on("invite-accepted-join-room", (mesg) => {
+        socket.emit("invite-accepted-join-room", mesg);
+        store.dispatch(clearDisplayOnlineUsers());
+        // eslint-disable-next-line no-restricted-globals
+        if (location.pathname !== "/tictactoe") {
+            // eslint-disable-next-line no-restricted-globals
+            location.replace(`/tictactoe`);
+        }
+    });
+
+    socket.on("start-game", (msg) => {
+        console.log("Starts GAME!!!", msg);
     });
 };

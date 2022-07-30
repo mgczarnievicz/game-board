@@ -21,6 +21,8 @@ export default function Invite() {
             // Accept game
             console.log("Accept");
             socket.emit("accept-invite-to-play", receivedInvite);
+            // eslint-disable-next-line no-restricted-globals
+            location.replace(`/${receivedInvite?.game_name}`);
         } else {
             //Reject game.
             console.log("Reject");

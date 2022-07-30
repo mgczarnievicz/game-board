@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/reducer";
 import "./tictactoe.css";
@@ -15,6 +15,7 @@ export default function TicTacToe() {
     const otherPlayerIsSelected = useSelector(
         (state: RootState) => state.displayOnlineUsers
     );
+    const [turnName, setTurnName] = useState();
 
     const [winner, setWinner] = useState(null);
     const [turn, setTurn] = useState<UserAlias>(initUser);

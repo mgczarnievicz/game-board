@@ -16,3 +16,7 @@ export interface LogInUser {
     email: string;
     password: string;
 }
+
+export type TicTacToeType = Array<Array<number>>;
+
+export type GameType = TicTacToeType;

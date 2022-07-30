@@ -2,7 +2,12 @@ import { QueryResult } from "pg"; //This bc I need the type there.
 
 import * as encryption from "./encryption";
 
-import { UserRegistration, LogInUser, UserAlias } from "./typesServer";
+import {
+    UserRegistration,
+    LogInUser,
+    UserAlias,
+    TicTacToeType,
+} from "./typesServer";
 
 import {
     registerUser,
@@ -159,3 +164,78 @@ export function getUserInfo(userId: number): Promise<boolean | UserAlias> {
 /* -----------------------------------------------------------------------
                                GAME LOGIC
 -------------------------------------------------------------------------*/
+function checkingRow(amountWinner: number, board: TicTacToeType, turn: number) {
+    let counter: number = 0;
+    const winnerPos: Array<Array<number>> = [];
+    for (let i = 0; i < board.length; i++) {
+        for (let j = 0; j < board[i].length; i++) {
+            if (board[i][j] === turn) {
+                counter++;
+                winnerPos.push([i, j]);
+                if (counter === amountWinner) {
+                    return "Winner";
+                }
+            } else {
+                counter = 0;
+            }
+        }
+    }
+}
+
+function checkingColum(
+    amountWinner: number,
+    board: TicTacToeType,
+    turn: number
+) {
+    let counter: number = 0;
+    const winnerPos: Array<Array<number>> = [];
+
+    // FIXME LENGTH
+    for (let j = 0; j < board[0].length; j++) {
+        for (let i = 0; i < board.length; i++) {
+            if (board[i][j] === turn) {
+                counter++;
+                winnerPos.push([i, j]);
+
+                if (counter === amountWinner) {
+                    return "Winner";
+                }
+            } else {
+                counter = 0;
+            }
+        }
+    }
+}
+
+function checkingDiagonal(
+    amountWinner: number,
+    board: TicTacToeType,
+    turn: number
+) {
+    let counter: number = 0;
+    const winnerPos: Array<Array<number>> = [];
+
+    for (let i = 0; i < board.length; i++) {
+        if (board[i][i] === turn) {
+            counter++;
+            winnerPos.push([i, i]);
+
+            if (counter === amountWinner) {
+                return "Winner";
+            }
+        } else {
+            counter = 0;
+        }
+    }
+}
+
+function checkingEmptySpaces(board: TicTacToeType) {
+    let emptySpaces: number = 0;
+    for (let i = 0; i < board.length; i++) {
+        for (let j = 0; j < board[i].length; i++) {
+            if (!board[i][j]) {
+                emptySpaces++;
+            }
+        }
+    }
+}

@@ -24,7 +24,7 @@ export default function DisplayOnlineUsers() {
         socket.emit("send-invite-to-play", {
             to: otherUser,
             from: myUser,
-            game_name: "I have to put it here",
+            game_name: "tictactoe",
         });
     }
 
