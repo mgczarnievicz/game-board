@@ -149,10 +149,10 @@ export function logInVerify(
                                GET USER INFO
 -------------------------------------------------------------------------*/
 export function getUserInfo(userId: number): Promise<boolean | UserAlias> {
-    console.log("Process GetUser Info id", userId);
+    // console.log("Process GetUser Info id", userId);
     return getProfileByUserId(userId)
         .then((result: QueryResult) => {
-            console.log("getUserInfo result.rows", result.rows);
+            // console.log("getUserInfo result.rows", result.rows);
             return result.rows[0];
         })
         .catch((err: QueryResult) => {

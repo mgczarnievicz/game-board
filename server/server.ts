@@ -6,7 +6,12 @@ import { QueryResult } from "pg";
 import { createServer } from "http";
 import { Server, Socket } from "socket.io";
 
-import { UserRegistration, LogInUser, UserAlias } from "./typesServer";
+import {
+    UserRegistration,
+    LogInUser,
+    UserAlias,
+    MsgPlayedMove,
+} from "./typesServer";
 
 import { registerNewUser, getUserInfo, logInVerify } from "./process";
 
@@ -54,7 +59,7 @@ app.use((req, res, next) => {
 
 app.get("/api/logout", (req, res) => {
     console.log(
-        `-----------------------------------------------------------------------------\n\t Log out`
+        `---------------------------------------------------------------------\n\t Log out`
     );
     req.session = null;
     res.json({
@@ -64,7 +69,7 @@ app.get("/api/logout", (req, res) => {
 
 app.get("/api/user/id", function (req, res) {
     console.log(
-        `-----------------------------------------------------------------------------\n\t Get User Id`
+        `---------------------------------------------------------------------\n\t Get User Id`
     );
     res.json({
         status: "Success",
@@ -78,18 +83,18 @@ app.get("/api/user/id", function (req, res) {
 
 app.post("/api/registration", (req, res) => {
     console.log(
-        `-----------------------------------------------------------------------------\n\t Registration Info:`,
+        `---------------------------------------------------------------------\n\t Registration Info:`,
         req.body
     );
     // Lets Register!
     registerNewUser(req.body)
         .then((currentUser: UserAlias | boolean) => {
-            console.log(
-                "currentUser:",
-                currentUser,
-                "\ntypeof currentUser:",
-                typeof currentUser
-            );
+            // console.log(
+            //     "currentUser:",
+            //     currentUser,
+            //     "\ntypeof currentUser:",
+            //     typeof currentUser
+            // );
             if (typeof currentUser != "boolean") {
                 if (req.session) req.session.userId = currentUser.user_id;
                 res.json({
@@ -113,19 +118,19 @@ app.post("/api/registration", (req, res) => {
 --------------------------------------------------------------------------------------- */
 app.post("/api/login", (req, res) => {
     console.log(
-        `-----------------------------------------------------------------------------\n\t Log In:`,
+        `---------------------------------------------------------------------\n\t Log In:`,
         req.body
     );
 
     logInVerify(req.body)
         .then((userLogIn: boolean | LogInUser) => {
-            console.log("logInVerify Response, userLogIn:", userLogIn);
+            // console.log("logInVerify Response, userLogIn:", userLogIn);
             if (typeof userLogIn === "boolean") {
                 res.json({
                     status: "Error",
                 });
             } else {
-                console.log("userLogIn not a boolean");
+                // console.log("userLogIn not a boolean");
                 if (req.session) req.session.userId = userLogIn.id;
                 res.json({
                     status: "Success",
@@ -144,11 +149,11 @@ app.post("/api/login", (req, res) => {
                        GET USER INFO AFTER REGISTRATION & LOGIN
 --------------------------------------------------------------------------------------- */
 app.get("/api/getUserInfo", (req, res) => {
-    console.log(
-        `-----------------------------------------------------------------------------\n\t Get User Info`
-    );
+    // console.log(
+    //     `------------------------------------------------------------------\n\t Get User Info`
+    // );
     getUserInfo(req.session.userId).then((data: UserAlias | boolean) => {
-        console.log("Data from getUserInfo", data);
+        // console.log("Data from getUserInfo", data);
         if (typeof data != "boolean") {
             res.json({
                 status: "Success",
@@ -226,7 +231,7 @@ type TicTacToeType = Array<Array<number>>;
 type GameType = TicTacToeType;
 
 interface Game {
-    players: Array<{ id: number; player: number }>;
+    players: Array<{ id: number; player: 1 | 2 }>;
     game: string;
     state: GameType;
 }
@@ -276,9 +281,9 @@ io.on("connection", function (socket: SocketWithSession) {
     const InfoOnlineUsers = async () => {
         const onlineUsers = Object.keys(userOnline);
         try {
-            console.log("listOnlineUsers", onlineUsers);
+            // console.log("listOnlineUsers", onlineUsers);
             const resp: QueryResult = await getInfoOnlineUsers(onlineUsers);
-            console.log("InfoOnlineUsers", resp.rows);
+            // console.log("InfoOnlineUsers", resp.rows);
             io.emit("online-users", resp.rows);
         } catch (err) {
             console.log("Error InfoOnlineUsers", err);
@@ -286,7 +291,9 @@ io.on("connection", function (socket: SocketWithSession) {
     };
 
     const userId = socket.request.session.userId;
-
+    console.log(
+        "----------------------------------------------------------------------"
+    );
     console.log(
         `User with the id: ${userId} and socket id ${socket.id} just connected.`
     );
@@ -324,11 +331,11 @@ io.on("connection", function (socket: SocketWithSession) {
     io.emit("testing-socket");
 
     socket.on("send-invite-to-play", (inviteMsg: InviteMsg) => {
-        // we join the room.
         const roomName = inviteMsg.from.alias + inviteMsg.to.alias;
         inviteMsg.room_name = roomName;
         console.log(
-            "You invited other User to play. set the room name",
+            "------------------------------------------------\n",
+            "You invited other User to play. set the room name\n",
             inviteMsg
         );
 
@@ -339,7 +346,8 @@ io.on("connection", function (socket: SocketWithSession) {
 
     socket.on("accept-invite-to-play", (inviteMsg: InviteMsg) => {
         console.log(
-            "The other player accepted my invite. Create room chat and let know the players to start playing",
+            "------------------------------------------------\n",
+            "The other player accepted my invite.\n",
             inviteMsg
         );
         // we join the room.
@@ -369,8 +377,23 @@ io.on("connection", function (socket: SocketWithSession) {
         // };
     });
 
+    interface PlayerInf extends UserAlias {
+        symbol: string;
+        player: 1 | 2;
+    }
+    interface StartGameMsg {
+        game_name: string;
+        room_name: string;
+        player1: PlayerInf;
+        player2: PlayerInf;
+    }
+
     socket.on("invite-accepted-join-room", (inviteMsg: InviteMsg) => {
-        console.log("invite-accepted-join-room, inviteMsg:", inviteMsg);
+        console.log(
+            "------------------------------------------------\n",
+            "invite-accepted-join-room, inviteMsg:\n",
+            inviteMsg
+        );
         const roomName = inviteMsg.room_name;
         Boards[roomName] = initGame;
         console.log("log Boards", Boards);
@@ -381,12 +404,46 @@ io.on("connection", function (socket: SocketWithSession) {
         Boards[roomName].game = inviteMsg.game_name;
         Boards[roomName].state = initTictacToe;
 
-        socket.to(roomName).emit("start-game");
+        const message: StartGameMsg = {
+            game_name: inviteMsg.game_name,
+            room_name: inviteMsg.room_name,
+            player1: { ...inviteMsg.from, symbol: "X", player: 1 },
+            player2: { ...inviteMsg.to, symbol: "O", player: 2 },
+        };
+
+        console.log("roomName", roomName);
+        socket.join(roomName);
+        console.log("socket.rooms", socket.rooms);
+        io.to(roomName).emit("start-game", message);
     });
-    console.log("Lets see the games that are on!", Boards);
+
+    socket.on("played-move", (playedMove: MsgPlayedMove) => {
+        let newMove: number;
+        playedMove.played_user_id === Boards[playedMove.room_name].players[0].id
+            ? (newMove = Boards[playedMove.room_name].players[0].player)
+            : (newMove = Boards[playedMove.room_name].players[1].player);
+
+        Boards[playedMove.room_name].state[playedMove.col][playedMove.row] =
+            newMove;
+
+        console.log(
+            "------------------------------------------------\n",
+            "Board with the new move\n",
+            Boards[playedMove.room_name].state
+        );
+        //I should here see the state of the game.
+        io.to(playedMove.room_name).emit("played-move", playedMove);
+    });
+
+    console.log(
+        "------------------------------------------------\n",
+        "Lets see the games that are on!\n",
+        Boards
+    );
 
     socket.on("reject-invite-to-play", (inviteMsg: InviteMsg) => {
         console.log(
+            "------------------------------------------------\n",
             "The other player REJECT my invite. Let the other Player KNOW",
             inviteMsg
         );

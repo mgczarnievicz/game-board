@@ -5,11 +5,14 @@ import { RootState } from "../redux/reducer";
 import { socket } from "../socket";
 import { InviteMsg } from "../typesClient";
 import { clearReceivedInvite } from "../redux/receivedInvite/slice";
+import { setPlayingGame } from "../redux/playingGame/slice";
 
 import "./invite.css";
+import { useNavigate } from "react-router-dom";
 
 export default function Invite() {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const receivedInvite: InviteMsg | null = useSelector(
         (state: RootState) => state.receivedInvite
@@ -21,8 +24,11 @@ export default function Invite() {
             // Accept game
             console.log("Accept");
             socket.emit("accept-invite-to-play", receivedInvite);
+            dispatch(setPlayingGame());
+            // REVIEW! I CAN USE NAVIGATE!
             // eslint-disable-next-line no-restricted-globals
-            location.replace(`/${receivedInvite?.game_name}`);
+            // location.replace(`/${receivedInvite?.game_name}`);
+            navigate(`/${receivedInvite?.game_name}`);
         } else {
             //Reject game.
             console.log("Reject");

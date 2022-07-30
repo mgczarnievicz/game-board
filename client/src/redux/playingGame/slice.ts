@@ -10,10 +10,6 @@ export default function playingGameReducer(
 ) {
     if (action.type === "/playingGame/setStatus") {
         playingGame = action.payload.status;
-
-        // action.payload
-        //     ? (displayOnlineUsers = action.payload.status as boolean)
-        //     : (displayOnlineUsers = false);
     }
 
     return playingGame;
@@ -22,9 +18,16 @@ export default function playingGameReducer(
 /* -------------------------------------------------------------------------------------------
                                     ACTION
 ----------------------------------------------------------------------------------------------*/
-export function setPlayingGame(status: boolean) {
+export function setPlayingGame() {
     return {
         type: "/playingGame/setStatus",
-        payload: { status },
+        payload: { status: true },
+    };
+}
+
+export function clearPlayingGame() {
+    return {
+        type: "/playingGame/setStatus",
+        payload: { status: false },
     };
 }

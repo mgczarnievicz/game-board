@@ -20,3 +20,14 @@ export interface LogInUser {
 export type TicTacToeType = Array<Array<number>>;
 
 export type GameType = TicTacToeType;
+
+interface BasicCommMsg {
+    game_name: string;
+    room_name: string;
+}
+export interface PlayedMove {
+    col: number;
+    row: number;
+    played_user_id: number;
+}
+export interface MsgPlayedMove extends BasicCommMsg, PlayedMove {}

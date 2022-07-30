@@ -1,12 +1,20 @@
 import { Store } from "redux";
 import { io, Socket } from "socket.io-client";
 
-import { ticTacToeNextTurn } from "./redux/tictactoe/slice";
 import { usersOnlineUpdate } from "./redux/usersOnline/slice";
 import { setReceivedInvite } from "./redux/receivedInvite/slice";
 import { clearDisplayOnlineUsers } from "./redux/displayOnlineUser/slice";
+import { setPlayingGame } from "./redux/playingGame/slice";
+import { setNewGame } from "./redux/newGame/slice";
+import { ticTacToeNextTurn } from "./redux/playedMove/slice";
 
-import { TictactoeType, UserAlias, InviteMsg } from "./typesClient";
+import {
+    TictactoeType,
+    UserAlias,
+    InviteMsg,
+    StartGameMsg,
+    MsgPlayedMove,
+} from "./typesClient";
 import { RootState } from "./redux/reducer";
 
 export let socket: Socket;
@@ -51,9 +59,10 @@ export const init = (
         console.log("state in received-invite-to-play", state);
     });
 
-    socket.on("invite-accepted-join-room", (mesg) => {
-        socket.emit("invite-accepted-join-room", mesg);
+    socket.on("invite-accepted-join-room", (msg: InviteMsg) => {
         store.dispatch(clearDisplayOnlineUsers());
+        store.dispatch(setPlayingGame());
+        socket.emit("invite-accepted-join-room", msg);
         // eslint-disable-next-line no-restricted-globals
         if (location.pathname !== "/tictactoe") {
             // eslint-disable-next-line no-restricted-globals
@@ -61,7 +70,15 @@ export const init = (
         }
     });
 
-    socket.on("start-game", (msg) => {
-        console.log("Starts GAME!!!", msg);
+    socket.on("start-game", (msg: StartGameMsg) => {
+        //set the other plyer
+        store.dispatch(setNewGame(msg));
+        console.log("Starts GAME!!!\n", msg);
+    });
+
+    socket.on("played-move", (msg: MsgPlayedMove) => {
+        //set the other plyer
+        store.dispatch(ticTacToeNextTurn(msg));
+        console.log("played-move!\n", msg);
     });
 };

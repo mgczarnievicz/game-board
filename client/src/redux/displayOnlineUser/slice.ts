@@ -22,10 +22,10 @@ export default function displayOnlineUserReducer(
 /* -------------------------------------------------------------------------------------------
                                     ACTION
 ----------------------------------------------------------------------------------------------*/
-export function setDisplayOnlineUsers(status: boolean) {
+export function setDisplayOnlineUsers() {
     return {
         type: "/displayOnlineUsers/setStatus",
-        payload: { status },
+        payload: { status: true },
     };
 }
 
