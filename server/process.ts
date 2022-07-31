@@ -421,14 +421,14 @@ export function analyzePlayedTicTacToe(board: TicTacToeType, turn: number) {
         diagonalVictory(3, board, turn, 3, columnsLimitsTicTacToe)
     ) {
         console.log("winnerArray", winnerArray);
-        return true;
+        return { status: "Winner", winnerArray };
     }
 
     const emptyResult = checkingEmptySpaces(board);
     console.log("emptyResult", emptyResult);
 
     if (!emptyResult) {
-        return true;
+        return { status: "Tie" };
     }
-    return false;
+    return { status: "Turn" };
 }

@@ -25,12 +25,30 @@ export default function TicTacToe() {
     const gameInfo: StartGameMsg = useSelector(
         (state: RootState) => state.gameInfo
     );
+
+    const [message, setMessage] = useState("");
+
     const [turn, setTurn] = useState<PlayerInf>(initUser);
 
     const [board, setBoard] = useState<Array<string>>(Array(9).fill(null));
+    const [cellStyle, setCellStyle] = useState<Array<boolean>>(
+        Array(9).fill(null)
+    );
 
     const newMove = useSelector((state: RootState) => state.playedMove);
+    // const winnerClass = {
+    //     background: "lightblue",
+    // };
 
+    function setMessageTurn() {
+        if (turn.user_id == myUser.user_id) {
+            //Msg Is your Turn
+            setMessage("Is Your Turn");
+        } else {
+            // Msg is turn.alias Turn
+            setMessage(`Is ${turn.alias} Turn`);
+        }
+    }
     useEffect(() => {
         if (newMove.played_user_id) {
             console.log("I got a new MOVE!", newMove);
@@ -48,10 +66,24 @@ export default function TicTacToe() {
 
             switch (newMove.status) {
                 case "Turn":
+                    setMessageTurn();
                     break;
                 case "Quit":
                     break;
                 case "Winner":
+                    if (newMove.status_user_id == myUser.user_id) {
+                        //Msg Is your Turn
+                        setMessage("You ARE THE WINNER");
+                    } else {
+                        // Msg is turn.alias Turn
+                        setMessage(`You LOOSE`);
+                    }
+
+                    if (newMove.winnerArray) {
+                        for (let i = 0; i < newMove.winnerArray.length; i++) {
+                            cellStyle[newMove.winnerArray[i]] = true;
+                        }
+                    }
                     break;
                 case "Tie":
                     break;
@@ -62,6 +94,7 @@ export default function TicTacToe() {
             console.log("Fist MOVE!");
             // Set the first Turn
             setTurn(gameInfo.player1);
+            setMessageTurn();
         }
     }, [gameInfo, newMove, board]);
 
@@ -94,34 +127,23 @@ export default function TicTacToe() {
             socket.emit("played-move", msg);
         }
     }
-    const WinnerStyle = {
-        background: "lightblue",
-        border: "2px solid darkblue",
-        fontSize: "30px",
-        fontWeight: "800",
-        cursor: "pointer",
-        outline: "none",
-    };
+
     return (
         <>
             <div className="tic-tac-toe-game">
                 <div>
                     <pre>{JSON.stringify(turn)}</pre>
                     {/* <p>{console.log(turn)}</p> */}
-                    {turn && (
+                    {message && (
                         <>
-                            {turn.user_id == myUser.user_id && <h3>Your</h3>}
-                            {turn.user_id != myUser.user_id && (
-                                <h3>{turn.alias}</h3>
-                            )}
-                            <h3>Turn</h3>
+                            <h3>{message}</h3>
                         </>
                     )}
                 </div>
 
                 <div className="tic-tac-toe-board">
                     <button
-                        className="cell"
+                        className={`cell ${cellStyle[0] ? "winnerClass" : ""} `}
                         key={0}
                         value={board[0]}
                         onClick={() => clickedHandle(0)}
@@ -129,7 +151,7 @@ export default function TicTacToe() {
                         {board[0]}
                     </button>
                     <button
-                        className="cell"
+                        className={`cell ${cellStyle[1] ? "winnerClass" : ""} `}
                         key={1}
                         value={board[1]}
                         onClick={() => clickedHandle(1)}
@@ -137,7 +159,7 @@ export default function TicTacToe() {
                         {board[1]}
                     </button>
                     <button
-                        className="cell"
+                        className={`cell ${cellStyle[2] ? "winnerClass" : ""} `}
                         key={2}
                         value={board[2]}
                         onClick={() => clickedHandle(2)}
@@ -145,7 +167,7 @@ export default function TicTacToe() {
                         {board[2]}
                     </button>
                     <button
-                        className="cell"
+                        className={`cell ${cellStyle[3] ? "winnerClass" : ""} `}
                         key={3}
                         value={board[3]}
                         onClick={() => clickedHandle(3)}
@@ -153,7 +175,7 @@ export default function TicTacToe() {
                         {board[3]}
                     </button>
                     <button
-                        className="cell"
+                        className={`cell ${cellStyle[4] ? "winnerClass" : ""} `}
                         key={4}
                         value={board[4]}
                         onClick={() => clickedHandle(4)}
@@ -161,7 +183,7 @@ export default function TicTacToe() {
                         {board[4]}
                     </button>
                     <button
-                        className="cell"
+                        className={`cell ${cellStyle[5] ? "winnerClass" : ""} `}
                         key={5}
                         value={board[5]}
                         onClick={() => clickedHandle(5)}
@@ -169,7 +191,7 @@ export default function TicTacToe() {
                         {board[5]}
                     </button>
                     <button
-                        className="cell"
+                        className={`cell ${cellStyle[6] ? "winnerClass" : ""} `}
                         key={6}
                         value={board[6]}
                         onClick={() => clickedHandle(6)}
@@ -177,7 +199,7 @@ export default function TicTacToe() {
                         {board[6]}
                     </button>
                     <button
-                        className="cell"
+                        className={`cell ${cellStyle[7] ? "winnerClass" : ""} `}
                         key={7}
                         value={board[7]}
                         onClick={() => clickedHandle(7)}
@@ -185,7 +207,7 @@ export default function TicTacToe() {
                         {board[7]}
                     </button>
                     <button
-                        className="cell"
+                        className={`cell ${cellStyle[8] ? "winnerClass" : ""} `}
                         key={8}
                         value={board[8]}
                         onClick={() => clickedHandle(8)}

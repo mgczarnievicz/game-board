@@ -435,11 +435,15 @@ io.on("connection", function (socket: SocketWithSession) {
             "Board with the new move\n",
             Boards[playedMove.room_name].state
         );
-        const result = analyzePlayedTicTacToe(
+        const { status, winnerArray } = analyzePlayedTicTacToe(
             Boards[playedMove.room_name].state,
             newMove
         );
-        console.log("analyzePlayedTicTacToe:", result);
+        playedMove.status = status as "Turn" | "Quit" | "Winner" | "Tie";
+        if (status == "Winner") {
+            playedMove.winnerArray = winnerArray;
+        }
+        console.log("analyzePlayedTicTacToe:", status);
         //I should here see the state of the game.
         io.to(playedMove.room_name).emit("played-move", playedMove);
     });
