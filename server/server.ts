@@ -13,7 +13,12 @@ import {
     MsgPlayedMove,
 } from "./typesServer";
 
-import { registerNewUser, getUserInfo, logInVerify } from "./process";
+import {
+    registerNewUser,
+    getUserInfo,
+    logInVerify,
+    analyzePlayedTicTacToe,
+} from "./process";
 
 import { getInfoOnlineUsers } from "./db";
 
@@ -226,7 +231,7 @@ game = {
 /*........................................................................... 
                             GAMES TYPES
 ...........................................................................*/
-type TicTacToeType = Array<Array<1 | 2 | null>>;
+type TicTacToeType = Array<1 | 2 | null>;
 
 type GameType = TicTacToeType;
 
@@ -252,9 +257,15 @@ const initGame: Game = {
 };
 
 const initTictacToe: TicTacToeType = [
-    [null, null, null],
-    [null, null, null],
-    [null, null, null],
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
 ];
 
 interface InviteMsg {
@@ -416,8 +427,7 @@ io.on("connection", function (socket: SocketWithSession) {
             ? (newMove = Boards[playedMove.room_name].players[0].player)
             : (newMove = Boards[playedMove.room_name].players[1].player);
 
-        Boards[playedMove.room_name].state[playedMove.col][playedMove.row] =
-            newMove;
+        Boards[playedMove.room_name].state[playedMove.index] = newMove;
 
         // Lets see if there is a Winner!
         console.log(
@@ -425,6 +435,11 @@ io.on("connection", function (socket: SocketWithSession) {
             "Board with the new move\n",
             Boards[playedMove.room_name].state
         );
+        const result = analyzePlayedTicTacToe(
+            Boards[playedMove.room_name].state,
+            newMove
+        );
+        console.log("analyzePlayedTicTacToe:", result);
         //I should here see the state of the game.
         io.to(playedMove.room_name).emit("played-move", playedMove);
     });

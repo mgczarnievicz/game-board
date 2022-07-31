@@ -17,7 +17,7 @@ export interface LogInUser {
     password: string;
 }
 
-export type TicTacToeType = Array<Array<number>>;
+export type TicTacToeType = Array<number>;
 
 export type GameType = TicTacToeType;
 
@@ -26,8 +26,7 @@ interface BasicCommMsg {
     room_name: string;
 }
 export interface PlayedMove {
-    col: number;
-    row: number;
+    index: number;
     played_user_id: number;
     status: "Turn" | "Quit" | "Winner" | "Tie";
     status_user_id: number;

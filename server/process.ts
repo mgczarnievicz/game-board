@@ -164,81 +164,237 @@ export function getUserInfo(userId: number): Promise<boolean | UserAlias> {
 /* -----------------------------------------------------------------------
                                GAME LOGIC
 -------------------------------------------------------------------------*/
-function checkingRow(amountWinner: number, board: TicTacToeType, turn: number) {
-    let counter: number = 0;
-    const winnerPos: Array<Array<number>> = [];
-    for (let i = 0; i < board.length; i++) {
-        for (let j = 0; j < board[i].length; i++) {
-            if (board[i][j] === turn) {
-                counter++;
-                winnerPos.push([i, j]);
-                if (counter === amountWinner) {
-                    return "Winner";
-                }
-            } else {
-                counter = 0;
-            }
-        }
-    }
-    return "Turn";
-}
 
-function checkingColum(
-    amountWinner: number,
+function horizontalVictory(
+    numConnectedWin: number,
     board: TicTacToeType,
-    turn: number
+    turn: number,
+    columnsLimits: Array<number>,
+    winnerArray: Array<number>
 ) {
     let counter: number = 0;
-    const winnerPos: Array<Array<number>> = [];
-
-    // FIXME LENGTH
-    for (let j = 0; j < board[0].length; j++) {
-        for (let i = 0; i < board.length; i++) {
-            if (board[i][j] === turn) {
-                counter++;
-                winnerPos.push([i, j]);
-
-                if (counter === amountWinner) {
-                    return "Winner";
-                }
-            } else {
-                counter = 0;
-            }
-        }
-    }
-    return "Turn";
-}
-
-function checkingDiagonal(
-    amountWinner: number,
-    board: TicTacToeType,
-    turn: number
-) {
-    let counter: number = 0;
-    const winnerPos: Array<Array<number>> = [];
+    let currentColumn = 0;
 
     for (let i = 0; i < board.length; i++) {
-        if (board[i][i] === turn) {
+        if (i >= columnsLimits[currentColumn + 1]) {
+            // Keeping track in which column I am in.
+            //Next column, reset values
+            currentColumn++;
+            winnerArray = [];
+            counter = 0;
+        } else if (board[i] == turn) {
+            winnerArray.push(i);
             counter++;
-            winnerPos.push([i, i]);
-
-            if (counter === amountWinner) {
-                return "Winner";
-            }
         } else {
             counter = 0;
+            winnerArray = [];
+        }
+
+        if (counter === numConnectedWin) {
+            console.log("WINNER!!");
+            return true;
         }
     }
-    return "Turn";
+
+    console.log("No WINNER");
+    /* We return an boolean, true is there is a winner and false otherwise */
+    return false;
+}
+
+function verticalVictory(
+    numConnectedWin: number,
+    board: TicTacToeType,
+    turn: number,
+    cantColumns: number,
+    winnerArray: Array<number>
+) {
+    let counter: number = 0;
+    let currentColumn = 0;
+
+    console.log();
+
+    for (let i = 0; i < cantColumns; i++) {
+        for (let j = i; j < board.length; j += cantColumns) {
+            // console.log(
+            //     "board[j]",
+            //     board[j],
+            //     "\tj",
+            //     j,
+            //     "\tturn",
+            //     turn,
+            //     "\tboard[j] == turn",
+            //     board[j] == turn
+            // );
+            if (board[j] == turn) {
+                winnerArray.push(j);
+                counter++;
+            } else {
+                counter = 0;
+                winnerArray = [];
+            }
+
+            if (counter === numConnectedWin) {
+                console.log("WINNER!!");
+                return true;
+            }
+        }
+    }
+
+    console.log("No WINNER");
+    /* We return an boolean, true is there is a winner and false otherwise */
+    return false;
+}
+
+function nextPositionDiagonal(
+    nextStep: number,
+    septForward: number,
+    board: TicTacToeType,
+    turn: number,
+    nextColumn: number,
+    counter: number,
+    columnsLimits: Array<number>,
+    numConnectedWin: number,
+    winnerArray: Array<number>
+): boolean {
+    nextStep -= septForward;
+
+    // console.log(
+    //     `nextStep: ${nextStep}\n stepForward: ${septForward}, nextColumn: ${nextColumn}, counter: ${counter}`
+    // );
+
+    if (
+        nextStep >= columnsLimits[nextColumn + 1] ||
+        (board[nextStep] != turn && counter !== numConnectedWin)
+    ) {
+        // I am NOT in  the next column or the slot has not my current player color.
+        return false;
+    }
+    counter++;
+    nextColumn++;
+    winnerArray.push(nextStep);
+
+    if (counter === numConnectedWin) {
+        return true;
+    }
+
+    return nextPositionDiagonal(
+        nextStep,
+        septForward,
+        board,
+        turn,
+        nextColumn,
+        counter,
+        columnsLimits,
+        numConnectedWin,
+        winnerArray
+    );
+}
+
+function diagonalVictory(
+    numConnectedWin: number,
+    board: TicTacToeType,
+    turn: number,
+    cantColumns: number,
+    columnsLimits: Array<number>,
+    winnerArray: Array<number>
+) {
+    /* 
+        +4 -> be careful that they are un the next column the next value.
+        +2 -> be careful that they are in the nest column.
+        */
+
+    let counter: number = 0;
+    let currentColumn = 0;
+
+    let nextColumn = 0;
+    let found = false;
+    let nextDiagPosition = 0;
+
+    for (let i = 0; i < board.length; i++) {
+        // First time founding a slot of the current Player.
+        if (board[i] == turn) {
+            // Reset values for the diagonal Search
+            winnerArray = [];
+            nextDiagPosition = i;
+
+            // Save the column where the slot was found, this is for limits reasons.
+            nextColumn = currentColumn + 1;
+            counter++;
+            winnerArray.push(nextDiagPosition);
+
+            // console.log(
+            //     `\tCurrentPlayer: ${turn}\n\tCurrent Column: ${currentColumn}\n\tNext Column:${nextColumn}`
+            // );
+            // console.log(
+            //     `\tCurrentPos: ${nextDiagPosition}\n\tstepForward: ${
+            //         cantColumns - 1
+            //     }, counter: ${counter}`
+            // );
+
+            // Search in one diagonal. -2
+            /*         /
+                     /
+                   /     From left to right */
+
+            found = nextPositionDiagonal(
+                nextDiagPosition,
+                cantColumns - 1,
+                board,
+                turn,
+                nextColumn,
+                counter,
+                columnsLimits,
+                numConnectedWin,
+                winnerArray
+            );
+            console.log("Return value of nextPosition (-2)", found);
+            if (found) {
+                console.log("winnerSlots (-2)", winnerArray);
+                return true;
+            }
+
+            /*  \
+                 \
+                  \    From right to left */
+            winnerArray = [];
+            winnerArray.push(nextDiagPosition);
+
+            // console.log(
+            //     `nextStep: ${nextDiagPosition}\n stepForward: ${
+            //         cantColumns - 1
+            //     }, nextColumn: ${nextColumn}, counter: ${counter}`
+            // );
+            found = nextPositionDiagonal(
+                nextDiagPosition,
+                cantColumns + 1,
+                board,
+                turn,
+                nextColumn,
+                counter,
+                columnsLimits,
+                numConnectedWin,
+                winnerArray
+            );
+            console.log("Return value od nextPosition (-4)", found);
+            if (found) {
+                console.log("winnerSlots (-4)", winnerArray);
+                return true;
+            }
+        }
+        counter = 0;
+
+        if (i >= columnsLimits[currentColumn + 1]) {
+            // Keeping track in which column I am in
+            currentColumn++;
+        }
+    }
 }
 
 function checkingEmptySpaces(board: TicTacToeType) {
     let emptySpaces: number = 0;
     for (let i = 0; i < board.length; i++) {
-        for (let j = 0; j < board[i].length; i++) {
-            if (!board[i][j]) {
-                emptySpaces++;
-            }
+        if (!board[i]) {
+            emptySpaces++;
         }
     }
     if (emptySpaces) {
@@ -248,13 +404,52 @@ function checkingEmptySpaces(board: TicTacToeType) {
     }
 }
 
-export function analyzePlayed(
-    amountWinner: number,
-    board: TicTacToeType,
-    turn: number
-) {
-    checkingRow(amountWinner, board, turn);
-    checkingColum(amountWinner, board, turn);
-    checkingDiagonal(amountWinner, board, turn);
-    checkingEmptySpaces(board);
+export function analyzePlayedTicTacToe(board: TicTacToeType, turn: number) {
+    const columnsLimitsTicTacToe = [0, 3, 6, 9];
+    let winnerArray: Array<number> = [];
+    console.log("----------------------------------------------------------");
+    const horizontalResult = horizontalVictory(
+        3,
+        board,
+        turn,
+        columnsLimitsTicTacToe,
+        winnerArray
+    );
+    console.log("horizontalResult", horizontalResult);
+    console.log("winnerArray", winnerArray);
+    console.log("----------------------------------------------------------");
+
+    const verticalResult = verticalVictory(
+        3,
+        board,
+        turn,
+        3,
+        (winnerArray = [])
+    );
+    console.log("verticalResult", verticalResult);
+    console.log("winnerArray", winnerArray);
+
+    console.log("----------------------------------------------------------");
+    const diagonalResult = diagonalVictory(
+        3,
+        board,
+        turn,
+        3,
+        columnsLimitsTicTacToe,
+        (winnerArray = [])
+    );
+    console.log("diagonalResult", diagonalResult);
+    console.log("winnerArray", winnerArray);
+
+    const emptyResult = checkingEmptySpaces(board);
+    console.log("----------------------------------------------------------");
+    console.log("emptyResult", horizontalResult);
+
+    if (verticalResult || horizontalResult || diagonalResult) {
+        return true;
+    }
+    if (!emptyResult) {
+        return true;
+    }
+    return false;
 }

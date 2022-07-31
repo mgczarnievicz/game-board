@@ -5,8 +5,7 @@ interface ActionType {
 }
 
 const initPlayedMove: PlayedMove = {
-    col: 0,
-    row: 0,
+    index: 0,
     played_user_id: 0,
     status: "Turn",
     status_user_id: 0,

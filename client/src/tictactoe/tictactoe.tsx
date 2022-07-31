@@ -25,15 +25,9 @@ export default function TicTacToe() {
     const gameInfo: StartGameMsg = useSelector(
         (state: RootState) => state.gameInfo
     );
-
     const [turn, setTurn] = useState<PlayerInf>(initUser);
-    const [board, setBoard] = useState<Array<Array<string>>>([
-        ["", "", ""],
-        ["", "", ""],
-        ["", "", ""],
-    ]);
 
-    const [board1, setBoard1] = useState<Array<string>>(Array(9).fill(null));
+    const [board, setBoard] = useState<Array<string>>(Array(9).fill(null));
 
     const newMove = useSelector((state: RootState) => state.playedMove);
 
@@ -45,7 +39,7 @@ export default function TicTacToe() {
             newMove.played_user_id == gameInfo.player1.user_id
                 ? (symbol = gameInfo.player1.symbol)
                 : (symbol = gameInfo.player2.symbol);
-            board[newMove.col][newMove.row] = symbol;
+            board[newMove.index] = symbol;
             console.log("Board newMove change", board);
 
             newMove.played_user_id == gameInfo.player1.user_id
@@ -77,13 +71,8 @@ export default function TicTacToe() {
     player turn to play
 
     */
-    function clickedHandle(arrayIndex: number, index: number) {
-        console.log(
-            "Just Clicked in board arrayIndex:",
-            arrayIndex,
-            " index:",
-            index
-        );
+    function clickedHandle(index: number) {
+        console.log("Just Clicked in board ", index);
 
         if (!turn.user_id) {
             console.log("I have tu ignore the clicked. Please select a Player");
@@ -95,8 +84,7 @@ export default function TicTacToe() {
             const msg: MsgPlayedMove = {
                 game_name: gameInfo.game_name,
                 room_name: gameInfo.room_name,
-                col: arrayIndex,
-                row: index,
+                index: index,
                 played_user_id: myUser.user_id,
                 status: "Turn",
                 status_user_id: myUser.user_id,
@@ -106,10 +94,7 @@ export default function TicTacToe() {
             socket.emit("played-move", msg);
         }
     }
-    function clickedHandle1(index: number) {
-        console.log("Index Button clicked!", index);
-    }
-    const style = {
+    const WinnerStyle = {
         background: "lightblue",
         border: "2px solid darkblue",
         fontSize: "30px",
@@ -138,113 +123,76 @@ export default function TicTacToe() {
                     <button
                         className="cell"
                         key={0}
-                        value={board1[0]}
-                        onClick={() => clickedHandle1(0)}
-                    ></button>
+                        value={board[0]}
+                        onClick={() => clickedHandle(0)}
+                    >
+                        {board[0]}
+                    </button>
                     <button
                         className="cell"
                         key={1}
-                        value={board1[1]}
-                        onClick={() => clickedHandle1(1)}
-                    ></button>
+                        value={board[1]}
+                        onClick={() => clickedHandle(1)}
+                    >
+                        {board[1]}
+                    </button>
                     <button
                         className="cell"
                         key={2}
-                        value={board1[2]}
-                        onClick={() => clickedHandle1(2)}
-                    ></button>
+                        value={board[2]}
+                        onClick={() => clickedHandle(2)}
+                    >
+                        {board[2]}
+                    </button>
                     <button
                         className="cell"
                         key={3}
-                        value={board1[3]}
-                        onClick={() => clickedHandle1(3)}
-                    ></button>
+                        value={board[3]}
+                        onClick={() => clickedHandle(3)}
+                    >
+                        {board[3]}
+                    </button>
                     <button
                         className="cell"
                         key={4}
-                        value={board1[4]}
-                        onClick={() => clickedHandle1(4)}
-                    ></button>
+                        value={board[4]}
+                        onClick={() => clickedHandle(4)}
+                    >
+                        {board[4]}
+                    </button>
                     <button
                         className="cell"
                         key={5}
-                        value={board1[5]}
-                        onClick={() => clickedHandle1(5)}
-                    ></button>
+                        value={board[5]}
+                        onClick={() => clickedHandle(5)}
+                    >
+                        {board[5]}
+                    </button>
                     <button
                         className="cell"
                         key={6}
-                        value={board1[6]}
-                        onClick={() => clickedHandle1(6)}
-                    ></button>
+                        value={board[6]}
+                        onClick={() => clickedHandle(6)}
+                    >
+                        {board[6]}
+                    </button>
                     <button
                         className="cell"
                         key={7}
-                        value={board1[7]}
-                        onClick={() => clickedHandle1(7)}
-                    ></button>
+                        value={board[7]}
+                        onClick={() => clickedHandle(7)}
+                    >
+                        {board[7]}
+                    </button>
                     <button
                         className="cell"
                         key={8}
-                        value={board1[8]}
-                        onClick={() => clickedHandle1(8)}
-                    ></button>
+                        value={board[8]}
+                        onClick={() => clickedHandle(8)}
+                    >
+                        {board[8]}
+                    </button>
                 </div>
-
-                {/* <div className="colum">
-                    <div
-                        className="cell cell-b-button"
-                        onClick={() => clickedHandle(0, 0)}
-                    >
-                        <p> {board && board[0][0]} </p>
-                    </div>
-                    <div
-                        className="cell cell-b-button cell-middle"
-                        onClick={() => clickedHandle(0, 1)}
-                    >
-                        {board && board[0][1]}
-                    </div>
-                    <div
-                        className="cell cell-b-button"
-                        onClick={() => clickedHandle(0, 2)}
-                    >
-                        {board && board[0][2]}
-                    </div>
-                </div>
-                <div className="colum">
-                    <div
-                        className="cell cell-b-button "
-                        onClick={() => clickedHandle(1, 0)}
-                    >
-                        {board && board[1][0]}
-                    </div>
-                    <div
-                        className="cell cell-b-button cell-middle"
-                        onClick={() => clickedHandle(1, 1)}
-                    >
-                        {board && board[1][1]}
-                    </div>
-                    <div
-                        className="cell cell-b-button"
-                        onClick={() => clickedHandle(1, 2)}
-                    >
-                        {board && board[1][2]}
-                    </div>
-                </div>
-                <div className="colum">
-                    <div className="cell " onClick={() => clickedHandle(2, 0)}>
-                        {board && board[2][0]}
-                    </div>
-                    <div
-                        className="cell cell-middle"
-                        onClick={() => clickedHandle(2, 1)}
-                    >
-                        {board && board[2][1]}
-                    </div>
-                    <div className="cell" onClick={() => clickedHandle(2, 2)}>
-                        {board && board[2][2]}
-                    </div>
-                </div> */}
             </div>
         </>
     );
