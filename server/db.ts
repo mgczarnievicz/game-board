@@ -86,30 +86,39 @@ export function getInfoOnlineUsers(
 export function saveGameWin(
     playerA_id: number,
     playerB_id: number,
-    gameName: string,
-    winner_id: number
+    gameId: number,
+    winner_id: number,
+    playerA_pts: number,
+    playerB_pts: number
 ): Promise<QueryResult<UserAlias>> {
     console.log(
-        ` playerA_id ${playerA_id},  playerB_id${playerB_id}, gameName ${gameName} winner_id ${winner_id}`
+        ` playerA_id ${playerA_id},  playerB_id${playerB_id}, gameName ${gameId} winner_id ${winner_id}`
     );
-    const q = `INSERT INTO games (player_A_id, player_B_id, game_name, winner_id)
-    VALUES ($1, $2, $3, $4 )`;
+    const q = `INSERT INTO games (player_A_id, player_B_id, game_name, winner_id, player_A_pts, player_B_pts)
+    VALUES ($1, $2, $3, $4, $5, $6 )`;
 
-    const param = [playerA_id, playerB_id, gameName, winner_id];
+    const param = [
+        playerA_id,
+        playerB_id,
+        gameId,
+        winner_id,
+        playerA_pts,
+        playerB_pts,
+    ];
     return db.query(q, param);
 }
 
 export function saveGameTie(
     playerA_id: number,
     playerB_id: number,
-    gameName: string
+    gameId: number
 ): Promise<QueryResult<UserAlias>> {
     console.log(
-        ` playerA_id ${playerA_id},  playerB_id${playerB_id}, gameName ${gameName}`
+        ` playerA_id ${playerA_id},  playerB_id${playerB_id}, gameName ${gameId}`
     );
-    const q = `INSERT INTO games (player_A_id, player_B_id, game_name, winner_id)
-    VALUES ($1, $2, $3, null )`;
+    const q = `INSERT INTO games (player_A_id, player_B_id, game_name, winner_id, player_A_pts, player_B_pts)
+    VALUES ($1, $2, $3, null, 1, 1 )`;
 
-    const param = [playerA_id, playerB_id, gameName];
+    const param = [playerA_id, playerB_id, gameId];
     return db.query(q, param);
 }

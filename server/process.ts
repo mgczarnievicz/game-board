@@ -494,6 +494,10 @@ export function analyzePlayedTicTacToe(board: TicTacToeType, turn: number) {
     return { status: "Turn" };
 }
 
+const GamesDictionary = {
+    tictactoe: 1,
+};
+
 export function saveGame(
     status: string,
     playerA_id: number,
@@ -502,11 +506,16 @@ export function saveGame(
     winner_id: number
 ) {
     if (status == "Winner") {
-        saveGameWin(playerA_id, playerB_id, gameName, winner_id).catch((err) =>
-            console.log("Error Saving Winner", err)
+        let ptsA = 0,
+            ptsB = 0;
+        playerA_id == winner_id ? (ptsA = 3) : (ptsB = 3);
+
+        // REVIEW THE GAME ID IS HARD CORD
+        saveGameWin(playerA_id, playerB_id, 1, winner_id, ptsA, ptsB).catch(
+            (err) => console.log("Error Saving Winner", err)
         );
     } else {
-        saveGameTie(playerA_id, playerB_id, gameName).catch((err) =>
+        saveGameTie(playerA_id, playerB_id, 1).catch((err) =>
             console.log("Error Saving tie:", err)
         );
     }
