@@ -413,21 +413,74 @@ function checkingEmptySpaces(board: TicTacToeType) {
         }
     }
     if (emptySpaces) {
-        return "Turn";
+        return true;
     } else {
-        return "Tie";
+        return false;
     }
 }
 
-export function analyzePlayedTicTacToe(board: TicTacToeType, turn: number) {
-    const columnsLimitsTicTacToe = [0, 3, 6, 9];
-    console.log("----------------------------------------------------------");
+// export function analyzePlayedTicTacToe(board: TicTacToeType, turn: number) {
+//     const columnsLimitsTicTacToe = [0, 3, 6, 9];
+//     console.log("----------------------------------------------------------");
 
-    if (
-        horizontalVictory(3, board, turn, columnsLimitsTicTacToe) ||
-        verticalVictory(3, board, turn, 3) ||
-        diagonalVictory(3, board, turn, 3, columnsLimitsTicTacToe)
-    ) {
+//     if (
+//         horizontalVictory(3, board, turn, columnsLimitsTicTacToe) ||
+//         verticalVictory(3, board, turn, 3) ||
+//         diagonalVictory(3, board, turn, 3, columnsLimitsTicTacToe)
+//     ) {
+//         console.log("winnerArray", winnerArray);
+//         return { status: "Winner", winnerArray };
+//     }
+
+//     const emptyResult = checkingEmptySpaces(board);
+//     console.log("emptyResult", emptyResult);
+
+//     if (!emptyResult) {
+//         return { status: "Tie" };
+//     }
+//     return { status: "Turn" };
+// }
+
+export function calculateWinner(board: TicTacToeType, turn: number) {
+    const lines = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6],
+    ];
+    console.log("turn", turn);
+    console.log("Board", board);
+    for (let i = 0; i < lines.length; i++) {
+        const [a, b, c] = lines[i];
+        console.log();
+        console.log(`a: ${a}\tB: ${b}\tc: ${c}\t`);
+        console.log(
+            `board[a] ${board[a]}\t board[b] ${board[b]}\tboard[c] ${board[c]}`
+        );
+        console.log(
+            "board[a] == turn && board[b] == turn && board[c] == turn",
+            board[a] == turn && board[b] == turn && board[c] == turn
+        );
+        if (board[a] == turn && board[b] == turn && board[c] == turn) {
+            winnerArray.push(a);
+            winnerArray.push(b);
+            winnerArray.push(c);
+
+            return true;
+        }
+    }
+    return false;
+}
+
+export function analyzePlayedTicTacToe(board: TicTacToeType, turn: number) {
+    console.log("----------------------------------------------------------");
+    winnerArray = [];
+    console.log("winnerArray when we enter the validation", winnerArray);
+    if (calculateWinner(board, turn)) {
         console.log("winnerArray", winnerArray);
         return { status: "Winner", winnerArray };
     }
@@ -440,6 +493,7 @@ export function analyzePlayedTicTacToe(board: TicTacToeType, turn: number) {
     }
     return { status: "Turn" };
 }
+
 export function saveGame(
     status: string,
     playerA_id: number,

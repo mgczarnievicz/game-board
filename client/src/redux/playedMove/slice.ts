@@ -9,6 +9,7 @@ const initPlayedMove: PlayedMove = {
     played_user_id: 0,
     status: "Turn",
     status_user_id: 0,
+    winnerArray: null,
 };
 
 // typeof ProfileInfoWBio
@@ -34,7 +35,7 @@ export function ticTacToeNextTurn(nextP: PlayedMove) {
     };
 }
 
-export function clearTicTacToeNextTurn() {
+export function clearPlayedMove() {
     return {
         type: `/playedMove/newMove`,
         payload: initPlayedMove,

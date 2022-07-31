@@ -5,7 +5,7 @@ import onlineUsersReducer from "./usersOnline/slice";
 import displayOnlineUserReducer from "./displayOnlineUser/slice";
 import playingGameReducer from "./playingGame/slice";
 import receivedInviteReducer from "./receivedInvite/slice";
-import gameInfoReducer from "./newGame/slice";
+import gameInfoReducer from "./gameInfo/slice";
 
 const rootReducer = combineReducers({
     user: userReducer,

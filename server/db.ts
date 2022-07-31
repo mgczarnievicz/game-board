@@ -89,6 +89,9 @@ export function saveGameWin(
     gameName: string,
     winner_id: number
 ): Promise<QueryResult<UserAlias>> {
+    console.log(
+        ` playerA_id ${playerA_id},  playerB_id${playerB_id}, gameName ${gameName} winner_id ${winner_id}`
+    );
     const q = `INSERT INTO games (player_A_id, player_B_id, game_name, winner_id)
     VALUES ($1, $2, $3, $4 )`;
 
@@ -101,6 +104,9 @@ export function saveGameTie(
     playerB_id: number,
     gameName: string
 ): Promise<QueryResult<UserAlias>> {
+    console.log(
+        ` playerA_id ${playerA_id},  playerB_id${playerB_id}, gameName ${gameName}`
+    );
     const q = `INSERT INTO games (player_A_id, player_B_id, game_name, winner_id)
     VALUES ($1, $2, $3, null )`;
 

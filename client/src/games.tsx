@@ -5,10 +5,11 @@ import { RootState } from "./redux/reducer";
 import DisplayOnlineUsers from "./DisplayOnlineUsers/displayOnlineUsers";
 import { setDisplayOnlineUsers } from "./redux/displayOnlineUser/slice";
 import { clearPlayingGame } from "./redux/playingGame/slice";
-import { clearNewGame } from "./redux/newGame/slice";
-import { clearTicTacToeNextTurn } from "./redux/playedMove/slice";
+import { clearNewGame } from "./redux/gameInfo/slice";
+import { clearPlayedMove } from "./redux/playedMove/slice";
 import { socket } from "./socket";
 import { StartGameMsg } from "./typesClient";
+import { clearReceivedInvite } from "./redux/receivedInvite/slice";
 
 export default function Games() {
     const navigate = useNavigate();
@@ -24,6 +25,13 @@ export default function Games() {
         (state: RootState) => state.gameInfo
     );
 
+    function gameEnded() {
+        dispatch(clearPlayingGame());
+        dispatch(clearReceivedInvite());
+        dispatch(clearNewGame());
+        dispatch(clearPlayedMove());
+    }
+
     useEffect(() => {
         //When I mount this page I clear all the games values.
         if (playingGame) {
@@ -33,10 +41,9 @@ export default function Games() {
                 game_name: gameInfo.game_name,
             });
         }
-        dispatch(clearTicTacToeNextTurn());
-        dispatch(clearNewGame());
-        dispatch(clearPlayingGame());
+        gameEnded();
     }, []);
+
     function linkToGo(linkToGo: string) {
         dispatch(setDisplayOnlineUsers());
         console.log("Clicked linkToGo", linkToGo);

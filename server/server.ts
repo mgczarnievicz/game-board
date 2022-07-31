@@ -11,6 +11,7 @@ import {
     LogInUser,
     UserAlias,
     MsgPlayedMove,
+    BasicCommMsg,
 } from "./typesServer";
 
 import {
@@ -257,18 +258,6 @@ const initGame: Game = {
     state: null,
 };
 
-const initTictacToe: TicTacToeType = [
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-    null,
-];
-
 interface InviteMsg {
     to: UserAlias;
     from: UserAlias;
@@ -333,8 +322,6 @@ io.on("connection", function (socket: SocketWithSession) {
     /* ----------------------------------------------------
                     Play Games - 2 player
     -------------------------------------------------------*/
-    io.emit("testing-socket");
-
     socket.on("send-invite-to-play", (inviteMsg: InviteMsg) => {
         const roomName = inviteMsg.from.alias + inviteMsg.to.alias;
         inviteMsg.room_name = roomName;
@@ -365,21 +352,7 @@ io.on("connection", function (socket: SocketWithSession) {
             // io.to(eachSocket).emit("received-invite-to-play", inviteMsg);
             // FIXME!!!!!!!
             io.to(eachSocket).emit("invite-accepted-join-room", inviteMsg);
-            // async () => {
-            //     const otherSocket = await io.in(eachSocket).fetchSockets();
-            //     otherSocket.join(roomName);
-            // };
         });
-
-        // socket.to(roomName).emit("start-game");
-
-        // async () => {
-        //     const sockets = await io.in(roomName).fetchSockets();
-        //     for (const socket of sockets) {
-        //         console.log(socket.id);
-        //         console.log(socket.rooms);
-        //     }
-        // };
     });
 
     interface PlayerInf extends UserAlias {
@@ -401,13 +374,24 @@ io.on("connection", function (socket: SocketWithSession) {
         );
         const roomName = inviteMsg.room_name;
         Boards[roomName] = initGame;
-        console.log("log Boards", Boards);
         Boards[roomName].players[0].id = inviteMsg.from.user_id;
 
         Boards[roomName].players[1].id = inviteMsg.to.user_id;
 
         Boards[roomName].game = inviteMsg.game_name;
-        Boards[roomName].state = initTictacToe;
+        Boards[roomName].state = [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+        ];
+
+        console.log("INIT BOARD\n", Boards);
 
         const message: StartGameMsg = {
             game_name: inviteMsg.game_name,
@@ -416,9 +400,9 @@ io.on("connection", function (socket: SocketWithSession) {
             player2: { ...inviteMsg.to, symbol: "O", player: 2 },
         };
 
-        console.log("roomName", roomName);
+        // console.log("roomName", roomName);
         socket.join(roomName);
-        console.log("socket.rooms", socket.rooms);
+        // console.log("socket.rooms", socket.rooms);
         io.to(roomName).emit("start-game", message);
     });
 
@@ -440,7 +424,9 @@ io.on("connection", function (socket: SocketWithSession) {
             Boards[playedMove.room_name].state,
             newMove
         );
+
         playedMove.status = status as "Turn" | "Quit" | "Winner" | "Tie";
+
         if (status == "Winner") {
             playedMove.winnerArray = winnerArray;
         }
@@ -448,21 +434,85 @@ io.on("connection", function (socket: SocketWithSession) {
         if (status == "Winner" || status == "Tie") {
             saveGame(
                 status,
-                Boards[playedMove.room_name].players[0].player,
-                Boards[playedMove.room_name].players[1].player,
+                Boards[playedMove.room_name].players[0].id,
+                Boards[playedMove.room_name].players[1].id,
                 Boards[playedMove.room_name].game,
                 playedMove.played_user_id
             );
+            Boards[playedMove.room_name].state = [
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+            ];
+            console.log("log Boards After Winner or Tie", Boards);
         }
         //I should here see the state of the game.
         io.to(playedMove.room_name).emit("played-move", playedMove);
     });
 
-    console.log(
-        "------------------------------------------------\n",
-        "Lets see the games that are on!\n",
-        Boards
-    );
+    socket.on("game-ended", (finishMsg: BasicCommMsg) => {
+        console.log("game-ended");
+        socket.leave(finishMsg.room_name);
+        delete Boards[finishMsg.room_name];
+        console.log("log Boards After Deleting", Boards);
+    });
+
+    socket.on("quite-game", (quiteMsg: BasicCommMsg) => {
+        console.log(
+            "------------------------------------------------\n",
+            "One player QUITE a GAME. Notify the other Player",
+            quiteMsg
+        );
+        saveGame(
+            "Quite",
+            Boards[quiteMsg.room_name].players[0].id,
+            Boards[quiteMsg.room_name].players[1].id,
+            Boards[quiteMsg.room_name].game,
+            null
+        );
+        socket.leave(quiteMsg.room_name);
+        const response = {
+            game_name: quiteMsg.game_name,
+            room_name: quiteMsg.room_name,
+            played_user_id: userId,
+            status: "Quit",
+        };
+        Boards[quiteMsg.room_name].state = [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+        ];
+        console.log("log Boards after quite-game", Boards);
+        io.to(quiteMsg.room_name).emit("quite-game", response);
+    });
+
+    socket.on("received-quite-game", (quiteMsg: BasicCommMsg) => {
+        console.log(
+            "------------------------------------------------\n",
+            "RECEIVED player QUITE a GAME. Notify the other Player",
+            quiteMsg
+        );
+        socket.leave(quiteMsg.room_name);
+        delete Boards[quiteMsg.room_name];
+
+        console.log(
+            "------------------------------------------------\n",
+            "Lets see the games that are on after received quiteGame!\n",
+            Boards
+        );
+    });
 
     socket.on("reject-invite-to-play", (inviteMsg: InviteMsg) => {
         console.log(
@@ -482,33 +532,4 @@ io.on("connection", function (socket: SocketWithSession) {
         //     }
         // });
     });
-
-    // socket.on("invitation-to-play", (invitation) => {
-    //     console.log("Invitation received", invitation);
-    //     // Here I will have to send a message to the other user. If the user Accept then create the
-    //     // room and both users can play.
-    // });
-
-    socket.on(
-        "chat-new-message",
-        (newMsg: { message: string; receiver_id: number }) => {
-            console.log("New Message", newMsg);
-            // addNewMessage(userId, newMsg).then((result: {} | boolean) => {
-            //     console.log("IN generalMsg-new-message", result);
-            //     if (result) {
-            //         // Here I have to see to whom send it.
-            //         if (newMsg.receiver_id) {
-            //             //Send it to the specific one
-            //             userOnline[newMsg.receiver_id].map((eachSocket) => {
-            //                 io.to(eachSocket).emit("chat-new-message", result);
-            //             });
-            //             socket.emit("chat-new-message", result);
-            //         } else {
-            //             //General to send
-            //             io.emit("chat-new-message", result);
-            //         }
-            //     }
-            // });
-        }
-    );
 });

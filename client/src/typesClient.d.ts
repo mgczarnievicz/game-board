@@ -32,6 +32,6 @@ export interface PlayedMove {
     played_user_id: number | null;
     status: "Turn" | "Quit" | "Winner" | "Tie";
     status_user_id?: number;
-    winnerArray?: Array<number>;
+    winnerArray?: Array<number> | null;
 }
 export interface MsgPlayedMove extends BasicCommMsg, PlayedMove {}

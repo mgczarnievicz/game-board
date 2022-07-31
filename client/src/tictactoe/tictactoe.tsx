@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/reducer";
 import "./tictactoe.css";
 import {
@@ -10,6 +10,10 @@ import {
 } from "../typesClient";
 import { socket } from "../socket";
 import { updateFor } from "typescript";
+import { clearNewGame } from "../redux/gameInfo/slice";
+import { clearReceivedInvite } from "../redux/receivedInvite/slice";
+import { clearPlayingGame } from "../redux/playingGame/slice";
+import { clearPlayedMove } from "../redux/playedMove/slice";
 
 const initUser: PlayerInf = {
     user_id: 0,
@@ -20,36 +24,33 @@ const initUser: PlayerInf = {
 };
 
 export default function TicTacToe() {
-    const myUser: UserAlias = useSelector((state: RootState) => state.user);
+    const dispatch = useDispatch();
 
+    const myUser: UserAlias = useSelector((state: RootState) => state.user);
+    const newMove = useSelector((state: RootState) => state.playedMove);
     const gameInfo: StartGameMsg = useSelector(
         (state: RootState) => state.gameInfo
     );
 
     const [message, setMessage] = useState("");
-
     const [turn, setTurn] = useState<PlayerInf>(initUser);
-
     const [board, setBoard] = useState<Array<string>>(Array(9).fill(null));
     const [cellStyle, setCellStyle] = useState<Array<boolean>>(
         Array(9).fill(null)
     );
 
-    const newMove = useSelector((state: RootState) => state.playedMove);
-    // const winnerClass = {
-    //     background: "lightblue",
-    // };
+    console.log("cellStyle", cellStyle);
 
-    function setMessageTurn() {
-        if (turn.user_id == myUser.user_id) {
-            //Msg Is your Turn
-            setMessage("Is Your Turn");
-        } else {
-            // Msg is turn.alias Turn
-            setMessage(`Is ${turn.alias} Turn`);
-        }
-    }
     useEffect(() => {
+        function setMessageTurn() {
+            if (turn.user_id == myUser.user_id) {
+                //Msg Is your Turn
+                setMessage("Is Your Turn");
+            } else {
+                // Msg is turn.alias Turn
+                setMessage(`Is ${turn.alias} Turn`);
+            }
+        }
         if (newMove.played_user_id) {
             console.log("I got a new MOVE!", newMove);
 
@@ -69,6 +70,9 @@ export default function TicTacToe() {
                     setMessageTurn();
                     break;
                 case "Quit":
+                    // Set Message the other player quite the game
+                    console.log("the other player quite the game.");
+                    setMessage(`The other player abandon the game. You Win`);
                     break;
                 case "Winner":
                     if (newMove.status_user_id == myUser.user_id) {
@@ -84,8 +88,15 @@ export default function TicTacToe() {
                             cellStyle[newMove.winnerArray[i]] = true;
                         }
                     }
+                    socket.emit("game-ended", {
+                        room_name: gameInfo.room_name,
+                    });
+                    dispatch(clearPlayingGame());
                     break;
                 case "Tie":
+                    console.log("Tie");
+                    setMessage(`Its a TIE`);
+                    dispatch(clearPlayingGame());
                     break;
                 default:
                     break;
@@ -96,19 +107,22 @@ export default function TicTacToe() {
             setTurn(gameInfo.player1);
             setMessageTurn();
         }
-    }, [gameInfo, newMove, board, turn]);
+    }, [gameInfo, newMove, board, turn, myUser.user_id, dispatch, cellStyle]);
 
-    /* 
-    What i need to receive form server:
-    if there is a winner.
-    player turn to play
-
-    */
     function clickedHandle(index: number) {
         console.log("Just Clicked in board ", index);
 
         if (!turn.user_id) {
             console.log("I have tu ignore the clicked. Please select a Player");
+            return;
+        }
+
+        if (
+            newMove.status == "Winner" ||
+            newMove.status == "Quit" ||
+            newMove.status == "Tie"
+        ) {
+            // The game has finish.
             return;
         }
 
@@ -132,7 +146,7 @@ export default function TicTacToe() {
         <>
             <div className="tic-tac-toe-game">
                 <div>
-                    <pre>{JSON.stringify(turn)}</pre>
+                    <pre>{JSON.stringify(newMove)}</pre>
                     {/* <p>{console.log(turn)}</p> */}
                     {message && (
                         <>

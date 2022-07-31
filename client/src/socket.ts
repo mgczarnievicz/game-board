@@ -4,8 +4,8 @@ import { io, Socket } from "socket.io-client";
 import { usersOnlineUpdate } from "./redux/usersOnline/slice";
 import { setReceivedInvite } from "./redux/receivedInvite/slice";
 import { clearDisplayOnlineUsers } from "./redux/displayOnlineUser/slice";
-import { setPlayingGame } from "./redux/playingGame/slice";
-import { setNewGame } from "./redux/newGame/slice";
+import { setPlayingGame, clearPlayingGame } from "./redux/playingGame/slice";
+import { setNewGame } from "./redux/gameInfo/slice";
 import { ticTacToeNextTurn } from "./redux/playedMove/slice";
 
 import {
@@ -80,5 +80,13 @@ export const init = (
         //set the other plyer
         store.dispatch(ticTacToeNextTurn(msg));
         console.log("played-move!\n", msg);
+    });
+
+    socket.on("quite-game", (msg: MsgPlayedMove) => {
+        //set the other plyer
+        store.dispatch(ticTacToeNextTurn(msg));
+        console.log("Quite Game!\n", msg);
+        socket.emit("received-quite-game", msg);
+        store.dispatch(clearPlayingGame());
     });
 };
