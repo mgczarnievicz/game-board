@@ -23,7 +23,7 @@ CREATE TABLE profile (
 
 CREATE TABLE games_name (
     id SERIAL PRIMARY KEY,
-    game_name VARCHAR NOT NULL CHECK (alias != ''),
+    game_name VARCHAR NOT NULL CHECK (game_name != '')
 );
 
 CREATE TABLE games(
@@ -45,4 +45,5 @@ CREATE TABLE games(
 -- );
 
 INSERT INTO games_name (game_name)
-    VALUES (`TicTacToe`)
+    VALUES ('TicTacToe')
+    RETURNING * 

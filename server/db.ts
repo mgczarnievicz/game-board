@@ -92,9 +92,9 @@ export function saveGameWin(
     playerB_pts: number
 ): Promise<QueryResult<UserAlias>> {
     console.log(
-        ` playerA_id ${playerA_id},  playerB_id${playerB_id}, gameName ${gameId} winner_id ${winner_id}`
+        ` playerA_id ${playerA_id},  playerB_id${playerB_id}, gameId ${gameId} winner_id ${winner_id}`
     );
-    const q = `INSERT INTO games (player_A_id, player_B_id, game_name, winner_id, player_A_pts, player_B_pts)
+    const q = `INSERT INTO games (player_A_id, player_B_id, game_id, winner_id, player_A_pts, player_B_pts)
     VALUES ($1, $2, $3, $4, $5, $6 )`;
 
     const param = [
@@ -114,11 +114,30 @@ export function saveGameTie(
     gameId: number
 ): Promise<QueryResult<UserAlias>> {
     console.log(
-        ` playerA_id ${playerA_id},  playerB_id${playerB_id}, gameName ${gameId}`
+        ` playerA_id ${playerA_id},  playerB_id${playerB_id}, gameId ${gameId}`
     );
-    const q = `INSERT INTO games (player_A_id, player_B_id, game_name, winner_id, player_A_pts, player_B_pts)
+    const q = `INSERT INTO games (player_A_id, player_B_id, game_id, winner_id, player_A_pts, player_B_pts)
     VALUES ($1, $2, $3, null, 1, 1 )`;
 
     const param = [playerA_id, playerB_id, gameId];
     return db.query(q, param);
+}
+
+export function getPointsTable(): Promise<QueryResult> {
+    const q = `WITH all_games AS (
+	SELECT player_a_id AS player, game_id, SUM(player_A_pts) AS points
+	FROM games
+	GROUP BY player_a_id, game_id
+	UNION ALL
+	SELECT player_b_id AS player, game_id, SUM(player_B_pts)
+	FROM games
+	GROUP BY player_b_id, game_id
+)
+SELECT all_games.player, profile.alias, profile.image_url, all_games.game_id, SUM(points) AS points 
+FROM all_games
+LEFT JOIN profile
+ON all_games.player = profile.user_id
+GROUP BY all_games.player, profile.alias, profile.image_url, all_games.game_id`;
+
+    return db.query(q, []);
 }
