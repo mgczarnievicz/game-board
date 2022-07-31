@@ -40,3 +40,10 @@ export function setNewGame(gameInfo: StartGameMsg) {
         payload: gameInfo,
     };
 }
+
+export function clearNewGame() {
+    return {
+        type: `/newGame/setGame`,
+        payload: initGameMsg,
+    };
+}

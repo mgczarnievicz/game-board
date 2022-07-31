@@ -30,6 +30,8 @@ export interface StartGameMsg extends BasicCommMsg {
 export interface PlayedMove {
     col: number;
     row: number;
-    played_user_id: number;
+    played_user_id: number | null;
+    status: "Turn" | "Quit" | "Winner" | "Tie";
+    status_user_id: number;
 }
 export interface MsgPlayedMove extends BasicCommMsg, PlayedMove {}

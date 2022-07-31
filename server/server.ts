@@ -226,7 +226,7 @@ game = {
 /*........................................................................... 
                             GAMES TYPES
 ...........................................................................*/
-type TicTacToeType = Array<Array<number>>;
+type TicTacToeType = Array<Array<1 | 2 | null>>;
 
 type GameType = TicTacToeType;
 
@@ -252,17 +252,10 @@ const initGame: Game = {
 };
 
 const initTictacToe: TicTacToeType = [
-    [0, 0, 0],
-    [0, 0, 0],
-    [0, 0, 0],
+    [null, null, null],
+    [null, null, null],
+    [null, null, null],
 ];
-
-const gameStatus = {
-    1: "turn",
-    2: "quit",
-    3: "winner",
-    4: "tie",
-};
 
 interface InviteMsg {
     to: UserAlias;
@@ -418,7 +411,7 @@ io.on("connection", function (socket: SocketWithSession) {
     });
 
     socket.on("played-move", (playedMove: MsgPlayedMove) => {
-        let newMove: number;
+        let newMove: 1 | 2;
         playedMove.played_user_id === Boards[playedMove.room_name].players[0].id
             ? (newMove = Boards[playedMove.room_name].players[0].player)
             : (newMove = Boards[playedMove.room_name].players[1].player);
@@ -426,6 +419,7 @@ io.on("connection", function (socket: SocketWithSession) {
         Boards[playedMove.room_name].state[playedMove.col][playedMove.row] =
             newMove;
 
+        // Lets see if there is a Winner!
         console.log(
             "------------------------------------------------\n",
             "Board with the new move\n",

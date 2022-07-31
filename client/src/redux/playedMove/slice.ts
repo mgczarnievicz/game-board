@@ -8,6 +8,8 @@ const initPlayedMove: PlayedMove = {
     col: 0,
     row: 0,
     played_user_id: 0,
+    status: "Turn",
+    status_user_id: 0,
 };
 
 // typeof ProfileInfoWBio
@@ -30,5 +32,12 @@ export function ticTacToeNextTurn(nextP: PlayedMove) {
     return {
         type: `/playedMove/newMove`,
         payload: nextP,
+    };
+}
+
+export function clearTicTacToeNextTurn() {
+    return {
+        type: `/playedMove/newMove`,
+        payload: initPlayedMove,
     };
 }

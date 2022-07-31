@@ -9,6 +9,7 @@ import {
     MsgPlayedMove,
 } from "../typesClient";
 import { socket } from "../socket";
+import { updateFor } from "typescript";
 
 const initUser: PlayerInf = {
     user_id: 0,
@@ -32,22 +33,42 @@ export default function TicTacToe() {
         ["", "", ""],
     ]);
 
+    const [board1, setBoard1] = useState<Array<string>>(Array(9).fill(null));
+
     const newMove = useSelector((state: RootState) => state.playedMove);
 
     useEffect(() => {
-        // Set the first Turn
-        setTurn(gameInfo.player1);
+        if (newMove.played_user_id) {
+            console.log("I got a new MOVE!", newMove);
 
-        let symbol: string = "";
-        newMove.played_user_id == gameInfo.player1.user_id
-            ? (symbol = gameInfo.player1.symbol)
-            : (symbol = gameInfo.player2.symbol);
-        board[newMove.col][newMove.row] = symbol;
-        console.log("Board newMove change", board);
+            let symbol: string = "";
+            newMove.played_user_id == gameInfo.player1.user_id
+                ? (symbol = gameInfo.player1.symbol)
+                : (symbol = gameInfo.player2.symbol);
+            board[newMove.col][newMove.row] = symbol;
+            console.log("Board newMove change", board);
 
-        newMove.played_user_id == gameInfo.player1.user_id
-            ? setTurn(gameInfo.player2)
-            : setTurn(gameInfo.player1);
+            newMove.played_user_id == gameInfo.player1.user_id
+                ? setTurn(gameInfo.player2)
+                : setTurn(gameInfo.player1);
+
+            switch (newMove.status) {
+                case "Turn":
+                    break;
+                case "Quit":
+                    break;
+                case "Winner":
+                    break;
+                case "Tie":
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            console.log("Fist MOVE!");
+            // Set the first Turn
+            setTurn(gameInfo.player1);
+        }
     }, [gameInfo, newMove, board]);
 
     /* 
@@ -77,26 +98,100 @@ export default function TicTacToe() {
                 col: arrayIndex,
                 row: index,
                 played_user_id: myUser.user_id,
+                status: "Turn",
+                status_user_id: myUser.user_id,
             };
             console.log("Message to send the server:", msg);
 
             socket.emit("played-move", msg);
         }
     }
+    function clickedHandle1(index: number) {
+        console.log("Index Button clicked!", index);
+    }
+    const style = {
+        background: "lightblue",
+        border: "2px solid darkblue",
+        fontSize: "30px",
+        fontWeight: "800",
+        cursor: "pointer",
+        outline: "none",
+    };
     return (
         <>
-            <div className="tic-tac-toe-board">
+            <div className="tic-tac-toe-game">
                 <div>
                     <pre>{JSON.stringify(turn)}</pre>
                     {/* <p>{console.log(turn)}</p> */}
                     {turn && (
                         <>
-                            <h3>{turn.alias}</h3>
-                            <h3>{turn.symbol}</h3>
+                            {turn.user_id == myUser.user_id && <h3>Your</h3>}
+                            {turn.user_id != myUser.user_id && (
+                                <h3>{turn.alias}</h3>
+                            )}
+                            <h3>Turn</h3>
                         </>
                     )}
                 </div>
-                <div className="colum">
+
+                <div className="tic-tac-toe-board">
+                    <button
+                        className="cell"
+                        key={0}
+                        value={board1[0]}
+                        onClick={() => clickedHandle1(0)}
+                    ></button>
+                    <button
+                        className="cell"
+                        key={1}
+                        value={board1[1]}
+                        onClick={() => clickedHandle1(1)}
+                    ></button>
+                    <button
+                        className="cell"
+                        key={2}
+                        value={board1[2]}
+                        onClick={() => clickedHandle1(2)}
+                    ></button>
+                    <button
+                        className="cell"
+                        key={3}
+                        value={board1[3]}
+                        onClick={() => clickedHandle1(3)}
+                    ></button>
+                    <button
+                        className="cell"
+                        key={4}
+                        value={board1[4]}
+                        onClick={() => clickedHandle1(4)}
+                    ></button>
+                    <button
+                        className="cell"
+                        key={5}
+                        value={board1[5]}
+                        onClick={() => clickedHandle1(5)}
+                    ></button>
+                    <button
+                        className="cell"
+                        key={6}
+                        value={board1[6]}
+                        onClick={() => clickedHandle1(6)}
+                    ></button>
+                    <button
+                        className="cell"
+                        key={7}
+                        value={board1[7]}
+                        onClick={() => clickedHandle1(7)}
+                    ></button>
+                    <button
+                        className="cell"
+                        key={8}
+                        value={board1[8]}
+                        onClick={() => clickedHandle1(8)}
+                    ></button>
+                </div>
+
+                {/* <div className="colum">
                     <div
                         className="cell cell-b-button"
                         onClick={() => clickedHandle(0, 0)}
@@ -149,7 +244,7 @@ export default function TicTacToe() {
                     <div className="cell" onClick={() => clickedHandle(2, 2)}>
                         {board && board[2][2]}
                     </div>
-                </div>
+                </div> */}
             </div>
         </>
     );

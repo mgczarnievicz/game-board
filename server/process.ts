@@ -180,6 +180,7 @@ function checkingRow(amountWinner: number, board: TicTacToeType, turn: number) {
             }
         }
     }
+    return "Turn";
 }
 
 function checkingColum(
@@ -205,6 +206,7 @@ function checkingColum(
             }
         }
     }
+    return "Turn";
 }
 
 function checkingDiagonal(
@@ -227,6 +229,7 @@ function checkingDiagonal(
             counter = 0;
         }
     }
+    return "Turn";
 }
 
 function checkingEmptySpaces(board: TicTacToeType) {
@@ -238,4 +241,20 @@ function checkingEmptySpaces(board: TicTacToeType) {
             }
         }
     }
+    if (emptySpaces) {
+        return "Turn";
+    } else {
+        return "Tie";
+    }
+}
+
+export function analyzePlayed(
+    amountWinner: number,
+    board: TicTacToeType,
+    turn: number
+) {
+    checkingRow(amountWinner, board, turn);
+    checkingColum(amountWinner, board, turn);
+    checkingDiagonal(amountWinner, board, turn);
+    checkingEmptySpaces(board);
 }

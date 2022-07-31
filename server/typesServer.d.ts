@@ -29,5 +29,7 @@ export interface PlayedMove {
     col: number;
     row: number;
     played_user_id: number;
+    status: "Turn" | "Quit" | "Winner" | "Tie";
+    status_user_id: number;
 }
 export interface MsgPlayedMove extends BasicCommMsg, PlayedMove {}
