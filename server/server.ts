@@ -18,6 +18,7 @@ import {
     getUserInfo,
     logInVerify,
     analyzePlayedTicTacToe,
+    saveGame,
 } from "./process";
 
 import { getInfoOnlineUsers } from "./db";
@@ -444,6 +445,15 @@ io.on("connection", function (socket: SocketWithSession) {
             playedMove.winnerArray = winnerArray;
         }
         console.log("analyzePlayedTicTacToe:", status);
+        if (status == "Winner" || status == "Tie") {
+            saveGame(
+                status,
+                Boards[playedMove.room_name].players[0].player,
+                Boards[playedMove.room_name].players[1].player,
+                Boards[playedMove.room_name].game,
+                playedMove.played_user_id
+            );
+        }
         //I should here see the state of the game.
         io.to(playedMove.room_name).emit("played-move", playedMove);
     });

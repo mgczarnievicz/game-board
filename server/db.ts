@@ -80,3 +80,30 @@ export function getInfoOnlineUsers(
 }
 
 // export { registerUser, getUserByEmail };
+/* ---------------------------------------------------------------
+                        games TABLE
+----------------------------------------------------------------*/
+export function saveGameWin(
+    playerA_id: number,
+    playerB_id: number,
+    gameName: string,
+    winner_id: number
+): Promise<QueryResult<UserAlias>> {
+    const q = `INSERT INTO games (player_A_id, player_B_id, game_name, winner_id)
+    VALUES ($1, $2, $3, $4 )`;
+
+    const param = [playerA_id, playerB_id, gameName, winner_id];
+    return db.query(q, param);
+}
+
+export function saveGameTie(
+    playerA_id: number,
+    playerB_id: number,
+    gameName: string
+): Promise<QueryResult<UserAlias>> {
+    const q = `INSERT INTO games (player_A_id, player_B_id, game_name, winner_id)
+    VALUES ($1, $2, $3, null )`;
+
+    const param = [playerA_id, playerB_id, gameName];
+    return db.query(q, param);
+}

@@ -14,6 +14,8 @@ import {
     saveProfile,
     getUserByEmail,
     getProfileByUserId,
+    saveGameWin,
+    saveGameTie,
 } from "./db";
 
 // @ts-ignore
@@ -268,11 +270,16 @@ function nextPositionDiagonal(
 ): boolean {
     nextStep -= septForward;
 
-    // console.log(
-    //     `nextStep: ${nextStep}\n stepForward: ${septForward}, nextColumn: ${nextColumn}, counter: ${counter}`
-    // );
+    console.log(
+        `nextStep: ${nextStep}\t stepForward: ${septForward}, \tnextColumn: ${nextColumn}, \tcounter: ${counter} \tcolumnsLimits[nextColumn + 1]:${
+            columnsLimits[nextColumn + 1]
+        } \t(nextColumn + 1) >= columnsLimits.length ${
+            nextColumn + 1 >= columnsLimits.length
+        }`
+    );
 
     if (
+        nextColumn + 1 >= columnsLimits.length ||
         nextStep >= columnsLimits[nextColumn + 1] ||
         (board[nextStep] != turn && counter !== numConnectedWin)
     ) {
@@ -365,6 +372,7 @@ function diagonalVictory(
                  \
                   \    From right to left */
             winnerArray = [];
+            counter = 1;
             winnerArray.push(nextDiagPosition);
 
             // console.log(
@@ -431,4 +439,21 @@ export function analyzePlayedTicTacToe(board: TicTacToeType, turn: number) {
         return { status: "Tie" };
     }
     return { status: "Turn" };
+}
+export function saveGame(
+    status: string,
+    playerA_id: number,
+    playerB_id: number,
+    gameName: string,
+    winner_id: number
+) {
+    if (status == "Winner") {
+        saveGameWin(playerA_id, playerB_id, gameName, winner_id).catch((err) =>
+            console.log("Error Saving Winner", err)
+        );
+    } else {
+        saveGameTie(playerA_id, playerB_id, gameName).catch((err) =>
+            console.log("Error Saving tie:", err)
+        );
+    }
 }

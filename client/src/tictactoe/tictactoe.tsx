@@ -96,7 +96,7 @@ export default function TicTacToe() {
             setTurn(gameInfo.player1);
             setMessageTurn();
         }
-    }, [gameInfo, newMove, board]);
+    }, [gameInfo, newMove, board, turn]);
 
     /* 
     What i need to receive form server:
