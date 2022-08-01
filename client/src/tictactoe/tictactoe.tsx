@@ -149,12 +149,12 @@ export default function TicTacToe() {
     return (
         <>
             <div className="tic-tac-toe-game">
-                <CountDown
+                {/* <CountDown
                     room_name={gameInfo.room_name}
                     game_name={gameInfo.game_name}
                     setFinishGame={setGameFinish}
                     isGameFinish={gameFinish}
-                />
+                /> */}
                 <div>
                     <pre>{JSON.stringify(newMove)}</pre>
                     {/* <p>{console.log(turn)}</p> */}

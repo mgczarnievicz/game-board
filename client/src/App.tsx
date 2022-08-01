@@ -63,6 +63,9 @@ function App() {
         })();
     }, []);
 
+    function toggleMenu() {
+        if (!playingGame) setShowMenu(!showMenu);
+    }
     function logOutFunction() {
         fetch("/api/logout")
             .then((resp) => resp.json())
@@ -99,27 +102,28 @@ function App() {
                         Log Out
                     </Link>
                 </nav>
-                <nav
-                    className="small-screen"
-                    onClick={() => setShowMenu(!showMenu)}
-                >
+                <nav className="small-screen " onClick={toggleMenu}>
                     <FontAwesomeIcon icon="bars" size="sm" color="white" />
                 </nav>
             </header>
 
-            {showMenu && (
-                <div className="small-screen-menu">
-                    <Link to="/" onClick={goToGameBoard}>
-                        Games
-                    </Link>
-                    <Link to="/points">Points</Link>
-                    <Link to="/myProfile">My Profile</Link>
+            <div
+                className={`small-screen-menu ${
+                    showMenu
+                        ? "small-screen-menu-moveIn"
+                        : "small-screen-menu-vanish"
+                } `}
+            >
+                <Link to="/" onClick={goToGameBoard}>
+                    Games
+                </Link>
+                <Link to="/points">Points</Link>
+                <Link to="/myProfile">My Profile</Link>
 
-                    <Link to="/" onClick={logOutFunction}>
-                        Log Out
-                    </Link>
-                </div>
-            )}
+                <Link to="/" onClick={logOutFunction}>
+                    Log Out
+                </Link>
+            </div>
 
             {showOnlineUsers && <DisplayOnlineUsers />}
             {receivedInvite && <Invite />}

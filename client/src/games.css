@@ -3,3 +3,11 @@
     border: 0.5em solid var(--color-extra);
     width: 80%;
 }
+
+.games h1 {
+    margin-bottom: 0.3em;
+}
+
+.games {
+    padding-top: 2em;
+}

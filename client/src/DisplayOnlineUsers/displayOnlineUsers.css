@@ -1,27 +1,33 @@
 .display-online-users {
-    width: 500px;
-    max-height: 500px;
+    width: 95%;
+    max-height: 50%;
 
     padding: 10px;
 
-    border: 2px solid blue;
+    border: 0.2em solid var(--color-extra);
     border-radius: 12px;
-    background-color: rgba(0, 255, 255, 0.764);
+    background-color: var(--color-board);
 
     overflow: auto;
 
     position: absolute;
     z-index: 2;
 
-    margin: 15% 26%;
+    margin: 2%;
 }
 
 .display-online-users .profile {
 }
 
 .display-online-users .profile img {
-    border: 2px solid black;
+    width: 3em;
+    height: 3em;
+    border: 2px solid var(--color-extra);
 }
+
+/* 
+REVIEW. THIS!
+*/
 
 .display-online-users .profile:hover {
     border: 2px solid whitesmoke;
