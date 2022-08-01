@@ -32,10 +32,18 @@ REVIEW. THIS!
 .display-online-users .profile:hover {
     border: 2px solid whitesmoke;
     border-radius: 12px;
-    background-color: blue;
+    background-color: var(--color-extra);
     color: whitesmoke;
     font-size: 20px;
 }
 .display-online-users .profile:hover img {
-    border: violet 2px solid;
+    border: var(--color-board) 2px solid;
+}
+
+@media screen and (min-width: 512px) {
+    .display-online-users {
+        width: 30em;
+        max-height: 50%;
+        margin: 20% 25%;
+    }
 }

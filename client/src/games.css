@@ -11,3 +11,9 @@
 .games {
     padding-top: 2em;
 }
+
+@media screen and (min-width: 512px) {
+    .games img {
+        width: 400px;
+    }
+}

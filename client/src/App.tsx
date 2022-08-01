@@ -92,15 +92,19 @@ function App() {
                     </div>
                 )}
                 <nav className="big-screen">
-                    <Link to="/" onClick={goToGameBoard}>
-                        Games
-                    </Link>
-                    <Link to="/points">Points</Link>
-                    <Link to="/myProfile">My Profile</Link>
+                    {!playingGame && (
+                        <>
+                            <Link to="/" onClick={goToGameBoard}>
+                                Games
+                            </Link>
+                            <Link to="/points">Points</Link>
+                            <Link to="/myProfile">My Profile</Link>
 
-                    <Link to="/" onClick={logOutFunction}>
-                        Log Out
-                    </Link>
+                            <Link to="/" onClick={logOutFunction}>
+                                Log Out
+                            </Link>
+                        </>
+                    )}
                 </nav>
                 <nav className="small-screen " onClick={toggleMenu}>
                     <FontAwesomeIcon icon="bars" size="sm" color="white" />

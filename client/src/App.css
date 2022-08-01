@@ -41,6 +41,7 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    z-index: 3;
 }
 .small-screen-menu a {
     margin: 1em;
@@ -78,8 +79,18 @@ a {
     text-decoration: none;
 }
 
-/* REVIEW ! */
-
-.App-link {
-    color: #61dafb;
+@media screen and (min-width: 512px) {
+    .big-screen {
+        display: flex;
+        flex-direction: row;
+    }
+    .big-screen a {
+        margin: 1em;
+        color: var(--color-wite);
+        font-size: 1.5em;
+    }
+    .small-screen-menu,
+    .small-screen {
+        display: none;
+    }
 }

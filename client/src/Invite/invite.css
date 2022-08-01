@@ -1,30 +1,38 @@
 .invitation {
-    width: 500px;
-    height: 300px;
+    width: 95%;
+    height: 40vh;
 
     padding: 20px;
 
-    background-color: aquamarine;
-    border: 2px salmon solid;
+    background-color: var(--color-extra);
+    border: 0.2em var(--color-board) solid;
     border-radius: 12px;
+    color: var(--color-wite);
 
     position: absolute;
-    margin: 20%;
+    margin: 2%;
 
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-around;
 
-    z-index: 3;
+    z-index: 2;
 }
 
 .invitation .profile img {
     width: 80px;
     height: 80px;
 }
-.invitation .profile h3 {
-    font-size: 15px;
+.invitation h3 {
+    font-size: 1.3em;
+    font-weight: 300;
+}
+
+.invitation .profile img {
+    width: 5em;
+    height: 5em;
+    border: 2px solid var(--color-extra);
 }
 
 .invitation button {
@@ -39,4 +47,12 @@
     display: flex;
     flex-direction: row-reverse;
     justify-content: space-evenly;
+}
+
+@media screen and (min-width: 512px) {
+    .invitation {
+        width: 30em;
+        max-height: 50%;
+        margin: 10% 25%;
+    }
 }
