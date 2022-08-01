@@ -3,22 +3,57 @@
 }
 
 .App-header {
-    background-color: #1150ce;
-    min-height: 10vh;
+    background-color: var(--color-dark);
+    min-height: 5vh;
+    height: 10vh;
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    font-size: 25px;
-    color: white;
+    font-size: 1em;
 }
+
+.big-screen {
+    display: none;
+}
+
+.small-screen {
+    margin: 1em;
+    font-size: 2em;
+}
+.user-img {
+    padding: 1em;
+}
+
+.user-img img {
+    width: 4em;
+    border-radius: 50%;
+    border: 0.15em solid var(--color-board);
+    object-fit: cover;
+}
+
+.small-screen-menu {
+    width: 50%;
+    height: 100%;
+    background-color: var(--color-wite);
+    position: absolute;
+    right: 0em;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+.small-screen-menu a {
+    margin: 1em;
+    color: black;
+    font-size: 1.5em;
+}
+a {
+    margin: 0px 10px;
+    text-decoration: none;
+}
+
+/* REVIEW ! */
 
 .App-link {
     color: #61dafb;
-}
-
-nav a {
-    color: antiquewhite;
-    margin: 0px 10px;
-    text-decoration: none;
 }

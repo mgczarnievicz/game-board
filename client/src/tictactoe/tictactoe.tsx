@@ -33,6 +33,8 @@ export default function TicTacToe() {
         (state: RootState) => state.gameInfo
     );
 
+    const [gameFinish, setGameFinish] = useState(false);
+
     const [message, setMessage] = useState("");
     const [turn, setTurn] = useState<PlayerInf>(initUser);
     const [board, setBoard] = useState<Array<string>>(Array(9).fill(null));
@@ -92,12 +94,12 @@ export default function TicTacToe() {
                     socket.emit("game-ended", {
                         room_name: gameInfo.room_name,
                     });
-                    dispatch(clearPlayingGame());
+                    setGameFinish(true);
                     break;
                 case "Tie":
                     console.log("Tie");
                     setMessage(`Its a TIE`);
-                    dispatch(clearPlayingGame());
+                    setGameFinish(true);
                     break;
                 default:
                     break;
@@ -119,6 +121,7 @@ export default function TicTacToe() {
         }
 
         if (
+            gameFinish ||
             newMove.status == "Winner" ||
             newMove.status == "Quit" ||
             newMove.status == "Tie"
@@ -146,7 +149,12 @@ export default function TicTacToe() {
     return (
         <>
             <div className="tic-tac-toe-game">
-                <CountDown />
+                <CountDown
+                    room_name={gameInfo.room_name}
+                    game_name={gameInfo.game_name}
+                    setFinishGame={setGameFinish}
+                    isGameFinish={gameFinish}
+                />
                 <div>
                     <pre>{JSON.stringify(newMove)}</pre>
                     {/* <p>{console.log(turn)}</p> */}

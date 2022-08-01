@@ -1,3 +1,5 @@
+import "./games.css";
+
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
@@ -50,8 +52,8 @@ export default function Games() {
         navigate(linkToGo);
     }
     return (
-        <>
-            <div>games</div>
+        <div className="games">
+            <h1>Tic Tac Toe</h1>
 
             {/* <Link to="/tictactoe"> */}
             <img
@@ -62,6 +64,6 @@ export default function Games() {
                 }}
             ></img>
             {/* </Link> */}
-        </>
+        </div>
     );
 }

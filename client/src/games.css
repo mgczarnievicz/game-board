@@ -1,0 +1,5 @@
+.games img {
+    border-radius: 2em;
+    border: 0.5em solid var(--color-extra);
+    width: 80%;
+}

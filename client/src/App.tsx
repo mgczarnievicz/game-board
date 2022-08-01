@@ -1,7 +1,12 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./App.css";
+import "./general.css";
+
 import { Link, Route, Routes } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { faBars } from "@fortawesome/free-solid-svg-icons";
 
 import { userSetUser } from "./redux/user/slice";
 import TicTacToe from "./tictactoe/tictactoe";
@@ -12,7 +17,9 @@ import Profile from "./profile/profile";
 import DisplayOnlineUsers from "./DisplayOnlineUsers/displayOnlineUsers";
 import { clearDisplayOnlineUsers } from "./redux/displayOnlineUser/slice";
 import Invite from "./Invite/invite";
+import ProfilePhoto from "./profile/profilePhoto";
 
+library.add(faBars);
 // import Registration from "./registration";
 
 function App() {
@@ -28,6 +35,8 @@ function App() {
     const playingGame: boolean = useSelector(
         (state: RootState) => state.playingGame
     );
+
+    const [showMenu, setShowMenu] = useState(false);
 
     useEffect(() => {
         (async () => {
@@ -74,22 +83,43 @@ function App() {
             {/* <BrowserRouter> */}
             <header className="App-header">
                 {userInfo && (
-                    <>
-                        <Profile user={userInfo} />
-                    </>
+                    <div className="user-img">
+                        <ProfilePhoto user={userInfo} />
+                        {/* <Profile user={userInfo} /> */}
+                    </div>
                 )}
-                <nav>
+                <nav className="big-screen">
                     <Link to="/" onClick={goToGameBoard}>
                         Games
                     </Link>
-                    <Link to="/friends">Points</Link>
-                    <Link to="/chat">Chat</Link>
+                    <Link to="/points">Points</Link>
+                    <Link to="/myProfile">My Profile</Link>
 
                     <Link to="/" onClick={logOutFunction}>
                         Log Out
                     </Link>
                 </nav>
+                <nav
+                    className="small-screen"
+                    onClick={() => setShowMenu(!showMenu)}
+                >
+                    <FontAwesomeIcon icon="bars" size="sm" color="white" />
+                </nav>
             </header>
+
+            {showMenu && (
+                <div className="small-screen-menu">
+                    <Link to="/" onClick={goToGameBoard}>
+                        Games
+                    </Link>
+                    <Link to="/points">Points</Link>
+                    <Link to="/myProfile">My Profile</Link>
+
+                    <Link to="/" onClick={logOutFunction}>
+                        Log Out
+                    </Link>
+                </div>
+            )}
 
             {showOnlineUsers && <DisplayOnlineUsers />}
             {receivedInvite && <Invite />}

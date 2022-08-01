@@ -4,3 +4,14 @@
     padding: 0;
     margin: 0;
 }
+
+:root {
+    --color-dark: #630a10;
+    --color-light: #fcf0c8;
+    --color-board: #face7f;
+
+    --color-extra: #911f27;
+
+    --color-wite: whitesmoke;
+    --color-dark-green: #94b49f;
+}

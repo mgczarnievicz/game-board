@@ -87,6 +87,6 @@ export const init = (
         store.dispatch(ticTacToeNextTurn(msg));
         console.log("Quite Game!\n", msg);
         socket.emit("received-quite-game", msg);
-        store.dispatch(clearPlayingGame());
+        // store.dispatch(clearPlayingGame());
     });
 };
