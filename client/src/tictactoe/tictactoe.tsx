@@ -14,6 +14,7 @@ import { clearNewGame } from "../redux/gameInfo/slice";
 import { clearReceivedInvite } from "../redux/receivedInvite/slice";
 import { clearPlayingGame } from "../redux/playingGame/slice";
 import { clearPlayedMove } from "../redux/playedMove/slice";
+import CountDown from "../countDown/countDown";
 
 const initUser: PlayerInf = {
     user_id: 0,
@@ -145,6 +146,7 @@ export default function TicTacToe() {
     return (
         <>
             <div className="tic-tac-toe-game">
+                <CountDown />
                 <div>
                     <pre>{JSON.stringify(newMove)}</pre>
                     {/* <p>{console.log(turn)}</p> */}

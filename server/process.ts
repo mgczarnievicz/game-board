@@ -505,18 +505,23 @@ export function saveGame(
     gameName: string,
     winner_id: number
 ) {
+    // [field as keyof typeof someObj]
+    const gameId = GamesDictionary[gameName as keyof typeof GamesDictionary];
     if (status == "Winner") {
         let ptsA = 0,
             ptsB = 0;
         playerA_id == winner_id ? (ptsA = 3) : (ptsB = 3);
 
-        // REVIEW THE GAME ID IS HARD CORD
-        // GamesDictionary[gameName];
-        saveGameWin(playerA_id, playerB_id, 1, winner_id, ptsA, ptsB).catch(
-            (err) => console.log("Error Saving Winner", err)
-        );
+        saveGameWin(
+            playerA_id,
+            playerB_id,
+            gameId,
+            winner_id,
+            ptsA,
+            ptsB
+        ).catch((err) => console.log("Error Saving Winner", err));
     } else {
-        saveGameTie(playerA_id, playerB_id, 1).catch((err) =>
+        saveGameTie(playerA_id, playerB_id, gameId).catch((err) =>
             console.log("Error Saving tie:", err)
         );
     }
