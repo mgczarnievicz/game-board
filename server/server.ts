@@ -174,6 +174,11 @@ app.get("/api/getUserInfo", (req, res) => {
     });
 });
 
+app.get("/api/getPointsTable", (req, res) => {
+    // Get data  from in points table.
+    getTablePoints();
+});
+
 /* ---------------------------------------------------------------------------------------
                                 ALWAYS IN THE END!
 --------------------------------------------------------------------------------------- */
