@@ -1,12 +1,13 @@
 .tic-tac-toe-game {
-    margin: 10px;
-    padding: 20px;
+    margin: 1em;
+    padding: 1.2em;
     border: 2px solid black;
     font-family: "Indie Flower", cursive;
 
     display: flex;
     flex-direction: column;
     align-items: center;
+    box-sizing: content-box;
 }
 
 .colum {
@@ -36,27 +37,73 @@
 }
 
 .cell {
+    margin: 0px;
     width: 89px;
     height: 89px;
-    background: whitesmoke;
-    border: 2px solid black;
+    background: var(--color-light);
+    border: none;
     font-size: 30px;
     font-weight: 800;
     cursor: pointer;
     outline: none;
 }
 
+.cell-right {
+    border-right: 2px solid black;
+}
+.cell-left {
+    border-left: 2px solid black;
+}
+.cell-bottom {
+    border-bottom: 2px solid black;
+}
+.cell-top {
+    border-top: 2px solid black;
+}
+
 .tic-tac-toe-board {
-    border: 4px solid darkblue;
+    /* border: 0.5em solid darkblue; */
     border-radius: 10px;
     width: 267px;
     height: 267px;
-    margin: 0 auto;
-    padding: 20px;
+    /* margin: 0 auto; */
+    /* padding: 20px; */
     display: grid;
     grid-template: repeat(3, 1fr) / repeat(3, 1fr);
 }
 
 .winnerClass {
-    background-color: blueviolet;
+    /* background-color: var(--color-dark); */
+    color: var(--color-board);
+    text-shadow: 2px 2px 1px var(--color-dark);
+    animation: rotate-center 0.8s ease-in-out 4 both;
+}
+
+.rotate-center {
+    animation: rotate-center 0.6s ease-in-out 3 both;
+}
+/*
+ * ----------------------------------------
+ * animation rotate-center
+ * ----------------------------------------
+ */
+@keyframes rotate-center {
+    0% {
+        transform: rotate(0);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.tic-tact-toe-message {
+    margin-bottom: 1em;
+}
+
+.cancel-game {
+    margin-top: 5em;
+    width: 10em;
+    font-size: 20px;
+    padding: 5px;
+    border-radius: 12px;
 }

@@ -129,7 +129,7 @@ function App() {
                 </Link>
             </div>
 
-            {showOnlineUsers && <DisplayOnlineUsers />}
+            {showOnlineUsers && !playingGame && <DisplayOnlineUsers />}
             {receivedInvite && <Invite />}
 
             <Routes>

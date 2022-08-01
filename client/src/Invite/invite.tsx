@@ -43,8 +43,10 @@ export default function Invite() {
                 <div className="invitation">
                     {/* <pre>{JSON.stringify(receivedInvite)}</pre> */}
 
-                    <h3>Your received an Invite to play:</h3>
-                    <h3>{receivedInvite.game_name} from</h3>
+                    <h3>
+                        Your received an Invite to play: <br />
+                        {receivedInvite.game_name} from
+                    </h3>
                     <Profile user={receivedInvite?.from} />
 
                     <div className="invitation-button">
