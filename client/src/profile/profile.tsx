@@ -13,11 +13,10 @@ export default function Profile(props: PropsProfile) {
 
     return (
         <div className="profile">
-            <ProfilePhoto user={props.user} />
-            {/* <img
+            <img
                 src={props.user.image_url || require("../img/Oso.png")}
                 alt={props.user.alias}
-            ></img> */}
+            ></img>
             <h3>{props.user.alias}</h3>
         </div>
     );

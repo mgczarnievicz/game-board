@@ -1,7 +1,22 @@
+.access-welcome {
+    padding-top: 3em;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-around;
+    background-color: var(--color-dark);
+}
+
 .form {
+    width: 90%;
+    border-radius: 1em;
+    height: 30em;
     display: flex;
     flex-direction: column;
     align-items: center;
+    color: var(--color-wite);
+    justify-content: space-around;
 }
 
 .form form {
@@ -10,17 +25,47 @@
 }
 
 .form input {
-    width: 500px;
-    font-size: 20px;
+    background-color: var(--color-dark);
+    width: 15em;
+
+    /* width: 500px; */
+    font-size: 1.2em;
+    font-weight: lighter;
+
+    color: var(--color-light);
     border: none;
-    border-bottom: 2px solid black;
+    border-bottom: 2px solid var(--color-board);
     margin-top: 20px;
 }
 
+::-webkit-input-placeholder {
+    color: var(--color-light);
+    font-weight: lighter;
+}
+
 .form button {
-    width: 250px;
-    font-size: 20px;
-    margin: 10px 0px;
-    border: 2px solid cornflowerblue;
+    width: 10em;
+    height: 2em;
+    font-size: 1.3em;
+    margin: 1.5em 0px;
+    background-color: var(--color-board);
+    border: none;
+    /* border: 2px solid cornflowerblue; */
+    border-radius: 2em;
+}
+.form a {
+    color: var(--color-board);
+}
+
+.shadow {
+    box-shadow: 0px 0px 66px -15px rgba(0, 0, 0, 0.75);
     border-radius: 12px;
+}
+
+@media screen and (min-width: 512px) {
+    .form {
+        padding-top: 10px;
+        width: 500px;
+        border: 10px double var(--color-wite);
+    }
 }

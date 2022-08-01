@@ -62,8 +62,8 @@ export default function Registration() {
                 if (data.status === "Success") {
                     console.log("Everything is success!");
                     // eslint-disable-next-line no-restricted-globals
-                    // location.reload();
-                    navigate(0);
+                    location.reload();
+                    // navigate("/");
                     // location.replace("/");
                 } else {
                     setError(true);

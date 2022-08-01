@@ -54,8 +54,8 @@ export default function LogIn() {
                 if (data.status === "Success") {
                     console.log("Everything is success!");
                     // eslint-disable-next-line no-restricted-globals
-                    // location.replace("/");
-                    navigate("/");
+                    location.replace("/");
+                    // navigate("/");
                 } else {
                     setError(true);
                 }

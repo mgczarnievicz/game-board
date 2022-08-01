@@ -18,6 +18,8 @@ import DisplayOnlineUsers from "./DisplayOnlineUsers/displayOnlineUsers";
 import { clearDisplayOnlineUsers } from "./redux/displayOnlineUser/slice";
 import Invite from "./Invite/invite";
 import ProfilePhoto from "./profile/profilePhoto";
+import PointsTable from "./PointsTable/PointsTable";
+import EditProfile from "./EditProfile/EditProfile";
 
 library.add(faBars);
 // import Registration from "./registration";
@@ -87,8 +89,8 @@ function App() {
             <header className="App-header">
                 {userInfo && (
                     <div className="user-img">
-                        <ProfilePhoto user={userInfo} />
-                        {/* <Profile user={userInfo} /> */}
+                        {/* <ProfilePhoto user={userInfo} /> */}
+                        <Profile user={userInfo} />
                     </div>
                 )}
                 <nav className="big-screen">
@@ -135,6 +137,8 @@ function App() {
             <Routes>
                 <Route path="/" element={<Games />}></Route>
                 <Route path="/tictactoe" element={<TicTacToe />}></Route>
+                <Route path="/points" element={<PointsTable />}></Route>
+                <Route path="/myProfile" element={<EditProfile />}></Route>
             </Routes>
             {/* </BrowserRouter> */}
 

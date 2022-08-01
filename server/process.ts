@@ -25,27 +25,6 @@ const animals = require("animals");
 /* -----------------------------------------------------------------------
                                GENERAL USE
 -------------------------------------------------------------------------*/
-// NO VA ACA. Iría en el cliente
-const IMG_DICTIONARY = {
-    1: "https://imageboard-cy.s3.eu-central-1.amazonaws.com/boardGames/Arrdilla.png",
-    2: "https://imageboard-cy.s3.eu-central-1.amazonaws.com/boardGames/Camello.png",
-    3: "https://imageboard-cy.s3.eu-central-1.amazonaws.com/boardGames/Conejo.png",
-    4: "https://imageboard-cy.s3.eu-central-1.amazonaws.com/boardGames/Elefante.png",
-    5: "https://imageboard-cy.s3.eu-central-1.amazonaws.com/boardGames/Oso.png",
-    6: "https://imageboard-cy.s3.eu-central-1.amazonaws.com/boardGames/Pajaro.png",
-    7: "https://imageboard-cy.s3.eu-central-1.amazonaws.com/boardGames/Pato.png",
-    8: "https://imageboard-cy.s3.eu-central-1.amazonaws.com/boardGames/Perro.png",
-    9: "https://imageboard-cy.s3.eu-central-1.amazonaws.com/boardGames/Perro1.png",
-    10: "https://imageboard-cy.s3.eu-central-1.amazonaws.com/boardGames/Perro2.png",
-    11: "https://imageboard-cy.s3.eu-central-1.amazonaws.com/boardGames/Perro3.png",
-    12: "https://imageboard-cy.s3.eu-central-1.amazonaws.com/boardGames/Rinoceronte.png",
-    13: "https://imageboard-cy.s3.eu-central-1.amazonaws.com/boardGames/Zorro.png",
-    14: "https://imageboard-cy.s3.eu-central-1.amazonaws.com/boardGames/Zorro1.png",
-    15: "https://imageboard-cy.s3.eu-central-1.amazonaws.com/boardGames/racoon.png",
-    16: "https://imageboard-cy.s3.eu-central-1.amazonaws.com/boardGames/Loro2.png",
-    17: "https://imageboard-cy.s3.eu-central-1.amazonaws.com/boardGames/Loro.png",
-    18: "https://imageboard-cy.s3.eu-central-1.amazonaws.com/boardGames/Elefante2.png",
-};
 
 const DATE_OPTION = {
     day: "numeric",

@@ -23,10 +23,12 @@
 }
 .user-img {
     padding: 1em;
+    color: var(--color-wite);
 }
 
-.user-img img {
+.user-img .profile img {
     width: 4em;
+    height: 4em;
     border-radius: 50%;
     border: 0.15em solid var(--color-board);
     object-fit: cover;
@@ -35,7 +37,7 @@
 .small-screen-menu {
     width: 50%;
     height: 90%;
-    background-color: var(--color-wite);
+    background-color: var(--color-board);
     position: absolute;
     right: 0em;
     display: flex;

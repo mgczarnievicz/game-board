@@ -166,7 +166,7 @@ export default function TicTacToe() {
         <>
             <div className="tic-tac-toe-game">
                 <div className="tic-tact-toe-message">
-                    <pre>{JSON.stringify(newMove)}</pre>
+                    {/* <pre>{JSON.stringify(newMove)}</pre> */}
                     {/* <p>{console.log(turn)}</p> */}
                     {message && (
                         <>

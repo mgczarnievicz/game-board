@@ -22,7 +22,7 @@ import {
     saveGame,
 } from "./process";
 
-import { getInfoOnlineUsers } from "./db";
+import { getInfoOnlineUsers, getPointsTable } from "./db";
 
 const PORT = 8080;
 const app = express();
@@ -174,9 +174,26 @@ app.get("/api/getUserInfo", (req, res) => {
     });
 });
 
+/* ---------------------------------------------------------------------------------------
+                       GET POINTS TABLE
+--------------------------------------------------------------------------------------- */
+
 app.get("/api/getPointsTable", (req, res) => {
     // Get data  from in points table.
-    getTablePoints();
+    getPointsTable()
+        .then((result: QueryResult) => {
+            console.log("Points Table query", result.rows);
+            res.json({
+                status: "Success",
+                payload: result.rows,
+            });
+        })
+        .catch((err: QueryResult) => {
+            console.log("Error in Points Table", err);
+            res.json({
+                status: "Error",
+            });
+        });
 });
 
 /* ---------------------------------------------------------------------------------------
