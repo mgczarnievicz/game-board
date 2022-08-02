@@ -1,141 +1,97 @@
 import path from "path";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import NewProfileImage from "../newProfileImage/NewProfileImage";
 import ProfilePhoto from "../profile/profilePhoto";
 import { RootState } from "../redux/reducer";
 import { UserAlias } from "../typesClient";
 
 import "./EditProfile.css";
+import "../general.css";
 
-interface ImgDicType {
-    index: number;
-    url: string;
-    name: string;
+interface MyMatches {
+    match: string;
+    cant: number;
 }
-
-const IMG_DICTIONARY: Array<ImgDicType> = [
-    {
-        index: 0,
-        url: "/img/Elefante2.png",
-        name: "Elephant",
-    },
-    {
-        index: 1,
-        url: "../img/Arrdilla.png",
-        name: "Squirrel",
-    },
-    {
-        index: 3,
-        url: "../img/Conejo.png",
-        name: "Rabbit",
-    },
-    {
-        index: 2,
-        url: "../img/Camello.png",
-        name: "Camel",
-    },
-    {
-        index: 4,
-        url: "../img/Elefante.png",
-        name: "Elephant",
-    },
-    {
-        index: 5,
-        url: require("../img/Oso.png"),
-        name: "Bear",
-    },
-    {
-        index: 6,
-        url: "../img/Pajaro.png",
-        name: "Bird",
-    },
-    {
-        index: 7,
-        url: "../img/Pato.png",
-        name: "Duck",
-    },
-    {
-        index: 8,
-        url: "../img/Perro.png",
-        name: "Dog",
-    },
-    {
-        index: 9,
-        url: "../img/Perro1.png",
-        name: "Dog",
-    },
-    {
-        index: 10,
-        url: "../img/Perro2.png",
-        name: "Dog",
-    },
-    {
-        index: 11,
-        url: "../img/Perro3.png",
-        name: "Dog",
-    },
-    {
-        index: 12,
-        url: "../img/Rinoceronte.png",
-        name: "Rhinoceros",
-    },
-    {
-        index: 13,
-        url: "../img/Zorro.png",
-        name: "Fox",
-    },
-    {
-        index: 14,
-        url: "../img/Zorro1.png",
-        name: "Fox",
-    },
-    {
-        index: 15,
-        url: "../img/racoon.png",
-        name: "Racoon",
-    },
-    {
-        index: 16,
-        url: "../img/Loro2.png",
-        name: "Parrot",
-    },
-    {
-        index: 17,
-        url: "../img/Loro.png",
-        name: "Parrot",
-    },
-];
 
 export default function EditProfile() {
     const myUser: UserAlias = useSelector((state: RootState) => state.user);
+    const [toggle, setToggle] = useState(false);
+    const [arrayPoints, setArrayPoints] = useState<Array<MyMatches>>([]);
 
-    function imgSelected(index: number) {
-        console.log("Index", index);
-        console.log(IMG_DICTIONARY[index]);
+    useEffect(() => {
+        (async () => {
+            let abort = false;
+            try {
+                // handle fetch success
+                const respBody = await fetch("/api/getMatchInfo");
+                const data = await respBody.json();
+                console.log("Data from /api/getMatchInfo", data);
+
+                if (!abort) {
+                    return setArrayPoints(data.payload);
+                } else {
+                    console.log("ignore don't run a a state update");
+                }
+            } catch (err) {
+                // handle fetch failure
+                console.log("Error", err);
+            }
+
+            return () => {
+                abort = true;
+            };
+        })();
+    }, []);
+
+    function closeImage() {
+        setToggle(false);
     }
     return (
-        <div>
-            EditProfile
-            <div>
-                <ProfilePhoto user={myUser} />
+        <>
+            <div className="edit-profile-container">
+                <h1>My Profile</h1>
+                <div className="profile-info">
+                    <div onClick={() => setToggle(!toggle)}>
+                        <ProfilePhoto user={myUser} />
+                    </div>
+                    <h2>{myUser.alias}</h2>
+                </div>
+                <div className="points-table-container">
+                    <h3>My Matches</h3>
+                    <table className="points-table matches-table">
+                        <th>Result</th>
+                        <th>Total Points</th>
+                        <tbody>
+                            {arrayPoints &&
+                                arrayPoints.length != 0 &&
+                                arrayPoints.map((each: MyMatches) => {
+                                    return (
+                                        <>
+                                            <tr>
+                                                <td
+                                                    className="table-line"
+                                                    colSpan={2}
+                                                ></td>
+                                            </tr>
+
+                                            <tr>
+                                                <td className="matches-cell">
+                                                    <p>{each.match}</p>
+                                                </td>
+
+                                                <td className="total-cell">
+                                                    <p>{each.cant}</p>
+                                                </td>
+                                            </tr>
+                                        </>
+                                    );
+                                })}
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            <input></input>
-            <div className="image-container">
-                {IMG_DICTIONARY.map((each) => {
-                    return (
-                        <div>
-                            <img
-                                onClick={() => {
-                                    imgSelected(each.index);
-                                }}
-                                key={each.index}
-                                src={each.url || require("../img/Oso.png")}
-                                alt={each.name}
-                            ></img>
-                        </div>
-                    );
-                })}
-            </div>
-        </div>
+            {toggle && <NewProfileImage closeImage={closeImage} />}
+        </>
     );
 }

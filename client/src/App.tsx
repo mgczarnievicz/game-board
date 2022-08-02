@@ -6,7 +6,7 @@ import { Link, Route, Routes } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { faBars } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faX } from "@fortawesome/free-solid-svg-icons";
 
 import { userSetUser } from "./redux/user/slice";
 import TicTacToe from "./tictactoe/tictactoe";
@@ -21,7 +21,7 @@ import ProfilePhoto from "./profile/profilePhoto";
 import PointsTable from "./PointsTable/PointsTable";
 import EditProfile from "./EditProfile/EditProfile";
 
-library.add(faBars);
+library.add(faBars, faX);
 // import Registration from "./registration";
 
 function App() {
@@ -69,6 +69,7 @@ function App() {
         if (!playingGame) setShowMenu(!showMenu);
     }
     function logOutFunction() {
+        toggleMenu();
         fetch("/api/logout")
             .then((resp) => resp.json())
             .then((data) => {
@@ -79,7 +80,13 @@ function App() {
             });
     }
 
+    function goToClicked() {
+        toggleMenu();
+        dispatch(clearDisplayOnlineUsers());
+    }
+
     function goToGameBoard() {
+        toggleMenu();
         // If I go to gameBoard I abandon the game I was Playing.
         dispatch(clearDisplayOnlineUsers());
     }
@@ -99,8 +106,12 @@ function App() {
                             <Link to="/" onClick={goToGameBoard}>
                                 Games
                             </Link>
-                            <Link to="/points">Points</Link>
-                            <Link to="/myProfile">My Profile</Link>
+                            <Link to="/points" onClick={goToClicked}>
+                                Points
+                            </Link>
+                            <Link to="/myProfile" onClick={goToClicked}>
+                                My Profile
+                            </Link>
 
                             <Link to="/" onClick={logOutFunction}>
                                 Log Out
@@ -120,11 +131,18 @@ function App() {
                         : "small-screen-menu-vanish"
                 } `}
             >
+                <div onClick={toggleMenu} className="close-menu">
+                    <FontAwesomeIcon icon="x" />
+                </div>
                 <Link to="/" onClick={goToGameBoard}>
                     Games
                 </Link>
-                <Link to="/points">Points</Link>
-                <Link to="/myProfile">My Profile</Link>
+                <Link to="/points" onClick={goToClicked}>
+                    Points
+                </Link>
+                <Link to="/myProfile" onClick={goToClicked}>
+                    My Profile
+                </Link>
 
                 <Link to="/" onClick={logOutFunction}>
                     Log Out

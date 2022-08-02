@@ -20,9 +20,10 @@ import {
     logInVerify,
     analyzePlayedTicTacToe,
     saveGame,
+    getMatchInfoByUse,
 } from "./process";
 
-import { getInfoOnlineUsers, getPointsTable } from "./db";
+import { getInfoOnlineUsers, getPointsTable, updateImage } from "./db";
 
 const PORT = 8080;
 const app = express();
@@ -186,6 +187,48 @@ app.get("/api/getPointsTable", (req, res) => {
             res.json({
                 status: "Success",
                 payload: result.rows,
+            });
+        })
+        .catch((err: QueryResult) => {
+            console.log("Error in Points Table", err);
+            res.json({
+                status: "Error",
+            });
+        });
+});
+
+app.get("/api/getMatchInfo", (req, res) => {
+    getMatchInfoByUse(req.session.userId).then((data: [] | boolean) => {
+        console.log("Data from getUserInfo", data);
+        if (typeof data != "boolean") {
+            res.json({
+                status: "Success",
+                payload: data,
+            });
+        } else {
+            res.json({
+                status: "Error",
+            });
+        }
+    });
+});
+
+/* ---------------------------------------------------------------------------------------
+                       UPDATE IMAGE PROFILE TABLE
+--------------------------------------------------------------------------------------- */
+
+app.post("/api/updateImage", (req, res) => {
+    console.log(
+        `---------------------------------------------------------------------\n\t Update Img:`,
+        req.body
+    );
+    // Get data  from in points table.
+    updateImage(req.session.userId, req.body.image_url)
+        .then((result: QueryResult) => {
+            console.log("Update Image query", result.rows);
+            res.json({
+                status: "Success",
+                payload: result.rows[0],
             });
         })
         .catch((err: QueryResult) => {

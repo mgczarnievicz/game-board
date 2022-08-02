@@ -16,6 +16,9 @@ import {
     getProfileByUserId,
     saveGameWin,
     saveGameTie,
+    getCantWinnerMatches,
+    getCantTieMatches,
+    getCantTotalMatches,
 } from "./db";
 
 // @ts-ignore
@@ -138,6 +141,54 @@ export function getUserInfo(userId: number): Promise<boolean | UserAlias> {
         })
         .catch((err: QueryResult) => {
             console.log("Error in getUserInfo", err);
+            return false;
+        });
+}
+
+function capitalizeFirstLetter(string: string): string {
+    string = string.replace(/\s\s+/g, " ").trim();
+    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+}
+
+export function getMatchInfoByUse(userId: number) {
+    return Promise.all([
+        getCantWinnerMatches(userId),
+        getCantTieMatches(userId),
+        getCantTotalMatches(userId),
+    ])
+        .then((result) => {
+            console.log("results[0]", result[0].rows);
+            console.log("results[1]", result[1].rows);
+            console.log("results[2]", result[2].rows);
+
+            let newResult = [];
+            newResult.push(result[0].rows[0]);
+            newResult.push(result[1].rows[0]);
+            newResult.push(result[2].rows[0]);
+
+            newResult = newResult.map((each) => {
+                for (let key in each) {
+                    return {
+                        match: capitalizeFirstLetter(key),
+                        cant: Number.parseInt(each[key]),
+                    };
+                }
+            });
+
+            const totalLost =
+                newResult[2].cant - (newResult[1].cant + newResult[0].cant);
+
+            const lost = {
+                match: "Lost",
+                cant: totalLost,
+            };
+            newResult.splice(newResult.length - 1, 0, lost);
+            console.log("newResult", newResult);
+
+            return newResult;
+        })
+        .catch((error) => {
+            console.log("Error in getMatchInfoByUse ", error);
             return false;
         });
 }

@@ -44,34 +44,38 @@ export default function PointsTable() {
                 <th>User</th>
 
                 <th>Total Points</th>
+                <tbody>
+                    {arrayPoints.length != 0 &&
+                        arrayPoints.map((eachUser: UserPoints) => {
+                            return (
+                                <>
+                                    <tr>
+                                        <td
+                                            className="table-line"
+                                            colSpan={2}
+                                        ></td>
+                                    </tr>
 
-                {arrayPoints.length != 0 &&
-                    arrayPoints.map((eachUser: UserPoints) => {
-                        return (
-                            <>
-                                <tr>
-                                    <td className="table-line" colSpan={2}></td>
-                                </tr>
+                                    <tr>
+                                        <td className="image-alias-cell">
+                                            <img
+                                                src={
+                                                    eachUser.image_url ||
+                                                    require("../img/Oso.png")
+                                                }
+                                                alt={eachUser.alias}
+                                            ></img>
+                                            <p>{eachUser.alias}</p>
+                                        </td>
 
-                                <tr>
-                                    <td className="image-alias-cell">
-                                        <img
-                                            src={
-                                                eachUser.image_url ||
-                                                require("../img/Oso.png")
-                                            }
-                                            alt={eachUser.alias}
-                                        ></img>
-                                        <p>{eachUser.alias}</p>
-                                    </td>
-
-                                    <td className="pints-cel">
-                                        <p>{eachUser.points}</p>
-                                    </td>
-                                </tr>
-                            </>
-                        );
-                    })}
+                                        <td className="pints-cel">
+                                            <p>{eachUser.points}</p>
+                                        </td>
+                                    </tr>
+                                </>
+                            );
+                        })}
+                </tbody>
             </table>
         </div>
     );

@@ -1,8 +1,13 @@
 .App {
+    width: 100%;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .App-header {
+    width: 100%;
     background-color: var(--color-dark);
     min-height: 5vh;
     height: 10vh;
@@ -51,6 +56,13 @@
     font-size: 1.5em;
 }
 
+.close-menu {
+    padding-top: 1em;
+    padding-right: 1em;
+    width: 100%;
+    text-align: right;
+}
+
 .small-screen-menu-moveIn {
     animation: moveIn 0.6s forwards;
 }
@@ -94,5 +106,8 @@ a {
     .small-screen-menu,
     .small-screen {
         display: none;
+    }
+    .App-header {
+        height: 80px;
     }
 }

@@ -90,7 +90,7 @@ export default function TicTacToe() {
                         setMessage("You ARE THE WINNER");
                     } else {
                         // Msg is turn.alias Turn
-                        setMessage(`You LOOSE`);
+                        setMessage(`You LOST`);
                     }
 
                     if (newMove.winnerArray) {

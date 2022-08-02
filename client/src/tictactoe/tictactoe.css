@@ -2,6 +2,7 @@
     margin: 1em;
     padding: 1.2em;
     border: 2px solid black;
+    border-radius: 2em;
     font-family: "Indie Flower", cursive;
 
     display: flex;
@@ -14,19 +15,6 @@
     display: flex;
 }
 
-/* .cell {
-    width: 89px;
-    height: 89px;
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: xxx-large;
-    text-transform: capitalize;
-    cursor: pointer;
-    color: rgb(16, 14, 14);
-    font-weight: 900;
-} */
 .cell-b-button {
     border-bottom: 2px solid black;
 }
@@ -107,4 +95,10 @@
     font-size: 20px;
     padding: 5px;
     border-radius: 12px;
+}
+
+@media screen and (min-width: 512px) {
+    .cancel-game {
+        margin-top: 3em;
+    }
 }

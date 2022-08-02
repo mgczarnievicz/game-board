@@ -79,6 +79,25 @@ export function getInfoOnlineUsers(
     );
 }
 
+export function updateImage(
+    id: number,
+    image_url: string
+): Promise<QueryResult<UserAlias>> {
+    return db.query(
+        `UPDATE profile 
+            SET image_url = $1  
+            WHERE user_id = $2
+            RETURNING image_url`,
+        [image_url, id]
+    );
+}
+
+/* 
+UPDATE users (name, surname, email)
+    SET name = $1, surname = $2, email = $3  
+    WHERE id = $4`;
+*/
+
 // export { registerUser, getUserByEmail };
 /* ---------------------------------------------------------------
                         games TABLE
@@ -137,7 +156,45 @@ SELECT all_games.player, profile.alias, profile.image_url, all_games.game_id, SU
 FROM all_games
 LEFT JOIN profile
 ON all_games.player = profile.user_id
-GROUP BY all_games.player, profile.alias, profile.image_url, all_games.game_id`;
+GROUP BY all_games.player, profile.alias, profile.image_url, all_games.game_id
+ORDER by points DESC`;
 
     return db.query(q, []);
+}
+
+/* 
+SELECT COUNT (*) AS winners FROM games
+WHERE winner_id = 16;
+
+SELECT COUNT(*) AS tie FROM games
+WHERE player_a_pts=1 AND (player_A_id=16 OR player_b_id=16)
+
+SELECT COUNT(*) AS total FROM games
+WHERE (player_A_id=16 OR player_b_id=16)
+
+ gameId: number
+*/
+
+export function getCantWinnerMatches(user_id: number): Promise<QueryResult> {
+    const q = `SELECT COUNT (*) AS winners FROM games
+WHERE winner_id = $1;`;
+
+    const param = [user_id];
+    return db.query(q, param);
+}
+
+export function getCantTieMatches(user_id: number): Promise<QueryResult> {
+    const q = `SELECT COUNT(*) AS tie FROM games
+WHERE player_a_pts=1 AND (player_A_id=$1 OR player_b_id=$1)`;
+
+    const param = [user_id];
+    return db.query(q, param);
+}
+
+export function getCantTotalMatches(user_id: number): Promise<QueryResult> {
+    const q = `SELECT COUNT(*) AS total FROM games
+WHERE (player_A_id=$1 OR player_b_id=$1)`;
+
+    const param = [user_id];
+    return db.query(q, param);
 }

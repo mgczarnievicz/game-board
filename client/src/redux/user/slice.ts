@@ -29,8 +29,9 @@ export default function userReducer(
                 ? (user = action.payload as UserAlias)
                 : (user = initUser);
             break;
-        case "/userInfo/updatePhotoUrl":
-            // user = { ...user, image_url: action.payload.image_url };
+        case "/userInfo/updateImageUrl":
+            if (action.payload.image_url)
+                user = { ...user, image_url: action.payload.image_url };
             break;
         case "/userInfo/updateBio":
             // user = { ...user, bio: action.payload.bio };
@@ -51,10 +52,10 @@ export function userSetUser(user: UserAlias) {
     };
 }
 
-export function userUpdatePhotoUrl(image_url: string) {
+export function userUpdateImageUrl(image_url: string) {
     return {
-        type: `/userInfo/updatePhotoUrl`,
-        payload: { image_url },
+        type: `/userInfo/updateImageUrl`,
+        payload: { image_url: image_url },
     };
 }
 

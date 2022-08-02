@@ -12,6 +12,7 @@
 
     position: absolute;
     z-index: 2;
+    top: 6em;
 
     margin: 2%;
 }
@@ -43,7 +44,9 @@ REVIEW. THIS!
 @media screen and (min-width: 512px) {
     .display-online-users {
         width: 30em;
-        max-height: 50%;
-        margin: 20% 25%;
+        max-height: 600px;
+        overflow: auto;
+
+        margin: 30px 25%;
     }
 }

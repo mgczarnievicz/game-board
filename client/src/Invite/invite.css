@@ -10,7 +10,7 @@
     color: var(--color-wite);
 
     position: absolute;
-    margin: 2%;
+    margin: 3em 2%;
 
     display: flex;
     flex-direction: column;
@@ -53,6 +53,6 @@
     .invitation {
         width: 30em;
         max-height: 50%;
-        margin: 10% 25%;
+        margin: 100px 25%;
     }
 }
