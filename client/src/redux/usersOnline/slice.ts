@@ -11,7 +11,7 @@ export default function onlineUsersReducer(
 ) {
     switch (action.type) {
         case "usersOnline/update":
-            console.log("IN usersOnline/update");
+            // console.log("IN usersOnline/update");
             onlineUsers = action.payload.usersOnline;
             break;
         default:

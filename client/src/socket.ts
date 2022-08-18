@@ -38,25 +38,20 @@ export const init = (
     });
 
     socket.on("online-users", (newMsg: Array<UserAlias>) => {
-        console.log("online-users recevied", newMsg);
         store.dispatch(usersOnlineUpdate(newMsg));
     });
 
     socket.on("received-invite-to-play", (newMsg: InviteMsg) => {
-        console.log("Received received-invite-to-play:", newMsg);
         // If I am not playing a game reject the invite.
         const state: RootState = store.getState();
 
         if (state.receivedInvite && state.playingGame) {
             // Reject the Invite
             // set the Invite GB to null.
-            console.log("I am playing");
             socket.emit("reject-invite-to-play", newMsg);
         } else {
             store.dispatch(setReceivedInvite(newMsg));
         }
-
-        console.log("state in received-invite-to-play", state);
     });
 
     socket.on("invite-accepted-join-room", (msg: InviteMsg) => {
@@ -73,13 +68,17 @@ export const init = (
     socket.on("start-game", (msg: StartGameMsg) => {
         //set the other plyer
         store.dispatch(setNewGame(msg));
-        console.log("Starts GAME!!!\n", msg);
     });
 
     socket.on("played-move", (msg: MsgPlayedMove) => {
         //set the other plyer
         store.dispatch(ticTacToeNextTurn(msg));
-        console.log("played-move!\n", msg);
+    });
+
+    socket.on("time-out-end-game", (msg: MsgPlayedMove) => {
+        //set the other plyer
+        store.dispatch(ticTacToeNextTurn(msg));
+        console.log("time-out-end-game!\n", msg);
     });
 
     socket.on("quite-game", (msg: MsgPlayedMove) => {

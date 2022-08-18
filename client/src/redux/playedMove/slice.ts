@@ -18,7 +18,7 @@ export default function playedMoveReducer(
     action: ActionType
 ) {
     if (action.type === "/playedMove/newMove") {
-        console.log("action.payload", action.payload);
+        // console.log("action.payload", action.payload);
         playedMoveState = action.payload;
     }
 

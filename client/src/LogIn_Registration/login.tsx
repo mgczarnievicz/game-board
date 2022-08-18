@@ -28,8 +28,6 @@ export default function LogIn() {
     }
 
     async function handleSubmit() {
-        console.log("Handle the submit, inputsValues:", inputsValues);
-
         // Lets Valid the input before sending them to the server.
         if (
             !validator.isEmail(inputsValues.email) ||
@@ -38,7 +36,7 @@ export default function LogIn() {
             console.log("Error");
             setError(true);
         } else {
-            console.log("All inputs are valid");
+            // console.log("All inputs are valid");
 
             try {
                 const resp = await fetch("/api/login", {
@@ -52,7 +50,7 @@ export default function LogIn() {
                 const data = await resp.json();
 
                 if (data.status === "Success") {
-                    console.log("Everything is success!");
+                    // console.log("Everything is success!");
                     // eslint-disable-next-line no-restricted-globals
                     location.replace("/");
                     // navigate("/");

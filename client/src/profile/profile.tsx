@@ -9,8 +9,6 @@ interface PropsProfile {
 }
 
 export default function Profile(props: PropsProfile) {
-    console.log("Props in Profile:", props);
-
     return (
         <div className="profile">
             <img

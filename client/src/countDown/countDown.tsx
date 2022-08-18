@@ -17,20 +17,19 @@ export default function CountDown(props: CountDownProps) {
     // Renderer callback with condition
     // @ts-ignore comment.
     const renderer = ({ hours, minutes, seconds, completed, api }) => {
-        if (completed) {
+        if (completed && !props.isGameFinish) {
             // Render a complete state
-            /* when this happens  we loose our turn so we loos the game. Its like we " quit" the game.
+            /* when this happens  we loose our turn so we loos the game. Its like we "quit" the game.
             I need to send:
                 game_name
                 room_name
                 
              */
             props.setFinishGame(true);
-            socket.emit("quite-game", {
+            socket.emit("time-out-end-game", {
                 room_name: props.room_name,
                 game_name: props.game_name,
             });
-
             return <Completionist />;
         } else {
             if (props.isGameFinish) {
@@ -45,14 +44,9 @@ export default function CountDown(props: CountDownProps) {
         }
     };
 
-    // ReactDOM.render(
-    //     <Countdown date={Date.now() + 5000} renderer={renderer} />,
-    //     document.getElementById("root")
-    // );
-
     return (
         <>
-            <Countdown date={Date.now() + 10000} renderer={renderer} />,
+            <Countdown date={Date.now() + 10000} renderer={renderer} />
         </>
     );
 }

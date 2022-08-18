@@ -456,8 +456,6 @@ io.on("connection", function (socket: SocketWithSession) {
             null,
         ];
 
-        console.log("INIT BOARD\n", Boards);
-
         const message: StartGameMsg = {
             game_name: inviteMsg.game_name,
             room_name: inviteMsg.room_name,
@@ -522,10 +520,50 @@ io.on("connection", function (socket: SocketWithSession) {
     });
 
     socket.on("game-ended", (finishMsg: BasicCommMsg) => {
-        console.log("game-ended");
+        console.log(
+            "------------------------------------------------\n",
+            "Game Ended",
+            finishMsg
+        );
         socket.leave(finishMsg.room_name);
         delete Boards[finishMsg.room_name];
         console.log("log Boards After Deleting", Boards);
+    });
+
+    socket.on("time-out-end-game", (quiteMsg: BasicCommMsg) => {
+        console.log(
+            "------------------------------------------------\n",
+            "Times up. Game Ended. Notify Players",
+            quiteMsg
+        );
+
+        saveGame(
+            "Quite",
+            Boards[quiteMsg.room_name].players[0].id,
+            Boards[quiteMsg.room_name].players[1].id,
+            Boards[quiteMsg.room_name].game,
+            null
+        );
+
+        const response = {
+            game_name: quiteMsg.game_name,
+            room_name: quiteMsg.room_name,
+            played_user_id: userId,
+            status: "TimeUp",
+        };
+        Boards[quiteMsg.room_name].state = [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+        ];
+        socket.to(quiteMsg.room_name).emit("time-out-end-game", response);
+        socket.leave(quiteMsg.room_name);
     });
 
     socket.on("quite-game", (quiteMsg: BasicCommMsg) => {
@@ -540,6 +578,11 @@ io.on("connection", function (socket: SocketWithSession) {
             Boards[quiteMsg.room_name].players[1].id,
             Boards[quiteMsg.room_name].game,
             null
+        );
+
+        console.log(
+            `Sockets in room ${quiteMsg.room_name} are:`,
+            Object.keys(io.sockets.sockets)
         );
         socket.leave(quiteMsg.room_name);
         const response = {
@@ -560,13 +603,13 @@ io.on("connection", function (socket: SocketWithSession) {
             null,
         ];
         console.log("log Boards after quite-game", Boards);
-        io.to(quiteMsg.room_name).emit("quite-game", response);
+        socket.to(quiteMsg.room_name).emit("quite-game", response);
     });
 
     socket.on("received-quite-game", (quiteMsg: BasicCommMsg) => {
         console.log(
             "------------------------------------------------\n",
-            "RECEIVED player QUITE a GAME. Notify the other Player",
+            "RECEIVED player QUITE a GAME",
             quiteMsg
         );
         socket.leave(quiteMsg.room_name);

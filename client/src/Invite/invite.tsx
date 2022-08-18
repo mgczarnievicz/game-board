@@ -22,7 +22,7 @@ export default function Invite() {
     function buttonHandle(action: string) {
         if (action === "Accept") {
             // Accept game
-            console.log("Accept");
+            // console.log("Accept");
             socket.emit("accept-invite-to-play", receivedInvite);
             dispatch(setPlayingGame());
             // REVIEW! I CAN USE NAVIGATE!
@@ -31,7 +31,7 @@ export default function Invite() {
             navigate(`/${receivedInvite?.game_name}`);
         } else {
             //Reject game.
-            console.log("Reject");
+            // console.log("Reject");
             socket.emit("reject-invite-to-play", receivedInvite);
         }
         dispatch(clearReceivedInvite());

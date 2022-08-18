@@ -22,7 +22,7 @@ export default function userReducer(
 ) {
     switch (action.type) {
         case "/userInfo/receive":
-            console.log("action.payload", action.payload);
+            // console.log("action.payload", action.payload);
             user = { ...user, ...action.payload };
 
             action.payload

@@ -28,7 +28,7 @@ interface BasicCommMsg {
 export interface PlayedMove {
     index: number;
     played_user_id: number;
-    status: "Turn" | "Quit" | "Winner" | "Tie";
+    status: "Turn" | "Quit" | "Winner" | "Tie" | "TimeUp";
     status_user_id: number;
     winnerArray?: Array<number>;
 }

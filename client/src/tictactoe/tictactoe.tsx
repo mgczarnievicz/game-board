@@ -39,6 +39,8 @@ export default function TicTacToe() {
     );
 
     const [gameFinish, setGameFinish] = useState(false);
+    // const [timeOut, setTimeOut] = useState(false);
+
     const [buttonName, setButtonName] = useState("Quite Game");
 
     const [message, setMessage] = useState("");
@@ -47,8 +49,6 @@ export default function TicTacToe() {
     const [cellStyle, setCellStyle] = useState<Array<boolean>>(
         Array(9).fill(null)
     );
-
-    console.log("cellStyle", cellStyle);
 
     useEffect(() => {
         function setMessageTurn() {
@@ -79,10 +79,11 @@ export default function TicTacToe() {
                     setMessageTurn();
                     break;
                 case "Quit":
-                    // Set Message the other player quite the game
+                    // Set Message the other player quite the game, stop the timer!
                     console.log("the other player quite the game.");
                     setMessage(`The other player abandon the game. You Win`);
                     setButtonName("Back");
+                    setGameFinish(true);
                     break;
                 case "Winner":
                     if (newMove.status_user_id == myUser.user_id) {
@@ -110,6 +111,18 @@ export default function TicTacToe() {
                     setButtonName("Back");
                     setGameFinish(true);
                     break;
+                case "TimeUp":
+                    if (myUser.user_id == newMove.played_user_id) {
+                        setMessage("Time's Up! You Lost");
+                    } else {
+                        setMessage("Time's Up! You Win");
+                        socket.emit("game-ended", {
+                            room_name: gameInfo.room_name,
+                        });
+                    }
+                    setButtonName("Back");
+                    setGameFinish(true);
+                    break;
                 default:
                     break;
             }
@@ -122,10 +135,10 @@ export default function TicTacToe() {
     }, [gameInfo, newMove, board, turn, myUser.user_id, dispatch, cellStyle]);
 
     function clickedHandle(index: number) {
-        console.log("Just Clicked in board ", index);
+        // console.log("Just Clicked in board ", index);
 
         if (!turn.user_id) {
-            console.log("I have tu ignore the clicked. Please select a Player");
+            // console.log("I have tu ignore the clicked. Please select a Player");
             return;
         }
 
@@ -150,7 +163,7 @@ export default function TicTacToe() {
                 status: "Turn",
                 status_user_id: myUser.user_id,
             };
-            console.log("Message to send the server:", msg);
+            // console.log("Message to send the server:", msg);
 
             socket.emit("played-move", msg);
         }
