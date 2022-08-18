@@ -197,6 +197,10 @@ export function getMatchInfoByUse(userId: number) {
                                GAME LOGIC
 -------------------------------------------------------------------------*/
 
+/* -----------------------------------------------------------------------
+                               TIC TAC TOC
+-------------------------------------------------------------------------*/
+
 // NEED TO BE GLOBAL TO BE ABLE TO SAVE THE VALUES!
 let winnerArray: Array<number> = [];
 
@@ -257,6 +261,9 @@ function verticalVictory(
     winnerArray = [];
 
     for (let i = 0; i < cantColumns; i++) {
+        // Every time I go to a new colum, I rest
+        counter = 0;
+        winnerArray = [];
         for (let j = i; j < board.length; j += cantColumns) {
             // console.log(
             //     "board[j]",
@@ -298,10 +305,16 @@ function nextPositionDiagonal(
     columnsLimits: Array<number>,
     numConnectedWin: number
 ): boolean {
-    nextStep -= septForward;
+    nextStep += septForward;
 
+    if (nextStep < 0 || nextStep > board.length) {
+        console.log("Next step out of board:", nextStep);
+        return false;
+    }
+
+    console.log("\t-------------------------------");
     console.log(
-        `nextStep: ${nextStep}\t stepForward: ${septForward}, \tnextColumn: ${nextColumn}, \tcounter: ${counter} \tcolumnsLimits[nextColumn + 1]:${
+        `nextStep: ${nextStep}\t stepForward: ${septForward}, \tnextColumn: ${nextColumn}, \tcounter: ${counter} \ncolumnsLimits[nextColumn + 1]:${
             columnsLimits[nextColumn + 1]
         } \t(nextColumn + 1) >= columnsLimits.length ${
             nextColumn + 1 >= columnsLimits.length
@@ -368,14 +381,15 @@ function diagonalVictory(
             counter++;
             winnerArray.push(nextDiagPosition);
 
-            // console.log(
-            //     `\tCurrentPlayer: ${turn}\n\tCurrent Column: ${currentColumn}\n\tNext Column:${nextColumn}`
-            // );
-            // console.log(
-            //     `\tCurrentPos: ${nextDiagPosition}\n\tstepForward: ${
-            //         cantColumns - 1
-            //     }, counter: ${counter}`
-            // );
+            console.log(
+                `\tCurrentPlayer: ${turn}\n\tCurrent Column: ${currentColumn}\n\tNext Column:${nextColumn}`
+            );
+
+            console.log(
+                `\tCurrentPos: ${nextDiagPosition}\n\tstepForward: ${
+                    cantColumns - 1
+                }, counter: ${counter}`
+            );
 
             // Search in one diagonal. -2
             /*         /
@@ -405,11 +419,11 @@ function diagonalVictory(
             counter = 1;
             winnerArray.push(nextDiagPosition);
 
-            // console.log(
-            //     `nextStep: ${nextDiagPosition}\n stepForward: ${
-            //         cantColumns - 1
-            //     }, nextColumn: ${nextColumn}, counter: ${counter}`
-            // );
+            console.log(
+                `nextStep: ${nextDiagPosition}\n stepForward: ${
+                    cantColumns - 1
+                }, nextColumn: ${nextColumn}, counter: ${counter}`
+            );
             found = nextPositionDiagonal(
                 nextDiagPosition,
                 cantColumns + 1,
@@ -449,27 +463,30 @@ function checkingEmptySpaces(board: TicTacToeType) {
     }
 }
 
-// export function analyzePlayedTicTacToe(board: TicTacToeType, turn: number) {
-//     const columnsLimitsTicTacToe = [0, 3, 6, 9];
-//     console.log("----------------------------------------------------------");
+export function analyzePlayedTicTacToe(board: TicTacToeType, turn: number) {
+    const columnsLimitsTicTacToe = [0, 3, 6, 9];
+    console.log("----------------------------------------------------------");
+    console.log(board[0], "\t|", board[1], "\t|", board[2]);
+    console.log(board[3], "\t|", board[4], "\t|", board[5]);
+    console.log(board[6], "\t|", board[7], "\t|", board[8]);
 
-//     if (
-//         horizontalVictory(3, board, turn, columnsLimitsTicTacToe) ||
-//         verticalVictory(3, board, turn, 3) ||
-//         diagonalVictory(3, board, turn, 3, columnsLimitsTicTacToe)
-//     ) {
-//         console.log("winnerArray", winnerArray);
-//         return { status: "Winner", winnerArray };
-//     }
+    if (
+        horizontalVictory(3, board, turn, columnsLimitsTicTacToe) ||
+        verticalVictory(3, board, turn, 3) ||
+        diagonalVictory(3, board, turn, 3, columnsLimitsTicTacToe)
+    ) {
+        console.log("winnerArray", winnerArray);
+        return { status: "Winner", winnerArray };
+    }
 
-//     const emptyResult = checkingEmptySpaces(board);
-//     console.log("emptyResult", emptyResult);
+    const emptyResult = checkingEmptySpaces(board);
+    console.log("emptyResult", emptyResult);
 
-//     if (!emptyResult) {
-//         return { status: "Tie" };
-//     }
-//     return { status: "Turn" };
-// }
+    if (!emptyResult) {
+        return { status: "Tie" };
+    }
+    return { status: "Turn" };
+}
 
 export function calculateWinner(board: TicTacToeType, turn: number) {
     const lines = [
@@ -506,23 +523,23 @@ export function calculateWinner(board: TicTacToeType, turn: number) {
     return false;
 }
 
-export function analyzePlayedTicTacToe(board: TicTacToeType, turn: number) {
-    console.log("----------------------------------------------------------");
-    winnerArray = [];
-    console.log("winnerArray when we enter the validation", winnerArray);
-    if (calculateWinner(board, turn)) {
-        console.log("winnerArray", winnerArray);
-        return { status: "Winner", winnerArray };
-    }
+// export function analyzePlayedTicTacToe(board: TicTacToeType, turn: number) {
+//     console.log("----------------------------------------------------------");
+//     winnerArray = [];
+//     console.log("winnerArray when we enter the validation", winnerArray);
+//     if (calculateWinner(board, turn)) {
+//         console.log("winnerArray", winnerArray);
+//         return { status: "Winner", winnerArray };
+//     }
 
-    const emptyResult = checkingEmptySpaces(board);
-    console.log("emptyResult", emptyResult);
+//     const emptyResult = checkingEmptySpaces(board);
+//     console.log("emptyResult", emptyResult);
 
-    if (!emptyResult) {
-        return { status: "Tie" };
-    }
-    return { status: "Turn" };
-}
+//     if (!emptyResult) {
+//         return { status: "Tie" };
+//     }
+//     return { status: "Turn" };
+// }
 
 const GamesDictionary = {
     tictactoe: 1,

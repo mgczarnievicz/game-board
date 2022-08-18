@@ -173,14 +173,14 @@ export default function TicTacToe() {
                             <h3>{message}</h3>
                         </>
                     )}
-                    {/* {playingGame && (
+                    {playingGame && (
                         <CountDown
                             room_name={gameInfo.room_name}
                             game_name={gameInfo.game_name}
                             setFinishGame={setGameFinish}
                             isGameFinish={gameFinish}
                         />
-                    )} */}
+                    )}
                 </div>
 
                 <div className="tic-tac-toe-board">

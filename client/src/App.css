@@ -9,8 +9,8 @@
 .App-header {
     width: 100%;
     background-color: var(--color-dark);
-    min-height: 5vh;
-    height: 10vh;
+    min-height: 7vh;
+    height: 13vh;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -41,7 +41,7 @@
 
 .small-screen-menu {
     width: 50%;
-    height: 90%;
+    height: 100%;
     background-color: var(--color-board);
     position: absolute;
     right: 0em;
@@ -65,6 +65,7 @@
 
 .small-screen-menu-moveIn {
     animation: moveIn 0.6s forwards;
+    /* display: inline; */
 }
 
 @keyframes moveIn {
@@ -78,6 +79,7 @@
 
 .small-screen-menu-vanish {
     animation: vanish 0.7s forwards;
+    display: none;
 }
 @keyframes vanish {
     from {
