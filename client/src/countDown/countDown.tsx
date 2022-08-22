@@ -8,6 +8,7 @@ interface CountDownProps {
     game_name: string;
     setFinishGame: Function;
     isGameFinish: boolean;
+    myTurn: boolean;
 }
 
 export default function CountDown(props: CountDownProps) {
@@ -26,10 +27,12 @@ export default function CountDown(props: CountDownProps) {
                 
              */
             props.setFinishGame(true);
-            socket.emit("time-out-end-game", {
-                room_name: props.room_name,
-                game_name: props.game_name,
-            });
+            if (props.myTurn) {
+                socket.emit("time-out-end-game", {
+                    room_name: props.room_name,
+                    game_name: props.game_name,
+                });
+            }
             return <Completionist />;
         } else {
             if (props.isGameFinish) {

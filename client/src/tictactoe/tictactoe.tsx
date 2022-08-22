@@ -39,7 +39,7 @@ export default function TicTacToe() {
     );
 
     const [gameFinish, setGameFinish] = useState(false);
-    // const [timeOut, setTimeOut] = useState(false);
+    const [myTurn, setMyTurn] = useState(false);
 
     const [buttonName, setButtonName] = useState("Quite Game");
 
@@ -54,9 +54,11 @@ export default function TicTacToe() {
         function setMessageTurn() {
             if (turn.user_id == myUser.user_id) {
                 //Msg Is your Turn
+                setMyTurn(true);
                 setMessage("Is Your Turn");
             } else {
                 // Msg is turn.alias Turn
+                setMyTurn(false);
                 setMessage(`Is ${turn.alias} Turn`);
             }
         }
@@ -68,7 +70,7 @@ export default function TicTacToe() {
                 ? (symbol = gameInfo.player1.symbol)
                 : (symbol = gameInfo.player2.symbol);
             board[newMove.index] = symbol;
-            console.log("Board newMove change", board);
+            // console.log("Board newMove change", board);
 
             newMove.played_user_id == gameInfo.player1.user_id
                 ? setTurn(gameInfo.player2)
@@ -113,8 +115,10 @@ export default function TicTacToe() {
                     break;
                 case "TimeUp":
                     if (myUser.user_id == newMove.played_user_id) {
+                        console.log("Time's Up! You Lost");
                         setMessage("Time's Up! You Lost");
                     } else {
+                        console.log("Time's Up! You Win");
                         setMessage("Time's Up! You Win");
                         socket.emit("game-ended", {
                             room_name: gameInfo.room_name,
@@ -146,7 +150,8 @@ export default function TicTacToe() {
             gameFinish ||
             newMove.status == "Winner" ||
             newMove.status == "Quit" ||
-            newMove.status == "Tie"
+            newMove.status == "Tie" ||
+            newMove.status == "TimeUp"
         ) {
             // The game has finish.
 
@@ -192,6 +197,7 @@ export default function TicTacToe() {
                             game_name={gameInfo.game_name}
                             setFinishGame={setGameFinish}
                             isGameFinish={gameFinish}
+                            myTurn={myTurn}
                         />
                     )}
                 </div>

@@ -64,7 +64,6 @@ function saveNewUserAndGenerateAlias(
         .then((dbResult: QueryResult) => {
             const user_id = dbResult.rows[0].id;
             const alias = animals();
-            // console.log("Alias", alias, "\nuser_id", user_id);
             return saveProfile(user_id, alias + "_" + user_id)
                 .then((result: QueryResult<UserAlias>) => result.rows[0])
                 .catch((err: QueryResult) => {
@@ -83,7 +82,6 @@ export function registerNewUser(
 ): Promise<boolean | UserAlias> {
     // First hash the pass.
     // then write in db.
-    // console.log("In registerNewUser", newUser);
     return encryption
         .hash(newUser.password)
         .then((hashPass: string) => {
@@ -106,12 +104,11 @@ export function logInVerify(
     userLogIn: LogInUser
 ): Promise<LogInUser | boolean> {
     userLogIn = cleanEmptySpaces<LogInUser>(userLogIn);
-    console.log();
+
     return getUserByEmail(userLogIn.email.toLowerCase())
         .then((result: QueryResult) => {
             // See what we recived and if there is a result, then se if its empty or not.
             if (result.rows.length === 0) {
-                console.log("Email not register");
                 return false;
             }
             return encryption
@@ -119,7 +116,6 @@ export function logInVerify(
                 .catch((err: QueryResult) => err)
                 .then((isCorrect: boolean) => {
                     if (isCorrect) {
-                        console.log("You Are In!");
                         return result.rows[0];
                     } else {
                         return false;
@@ -133,10 +129,8 @@ export function logInVerify(
                                GET USER INFO
 -------------------------------------------------------------------------*/
 export function getUserInfo(userId: number): Promise<boolean | UserAlias> {
-    // console.log("Process GetUser Info id", userId);
     return getProfileByUserId(userId)
         .then((result: QueryResult) => {
-            // console.log("getUserInfo result.rows", result.rows);
             return result.rows[0];
         })
         .catch((err: QueryResult) => {
@@ -157,10 +151,6 @@ export function getMatchInfoByUse(userId: number) {
         getCantTotalMatches(userId),
     ])
         .then((result) => {
-            console.log("results[0]", result[0].rows);
-            console.log("results[1]", result[1].rows);
-            console.log("results[2]", result[2].rows);
-
             let newResult = [];
             newResult.push(result[0].rows[0]);
             newResult.push(result[1].rows[0]);
@@ -183,7 +173,6 @@ export function getMatchInfoByUse(userId: number) {
                 cant: totalLost,
             };
             newResult.splice(newResult.length - 1, 0, lost);
-            console.log("newResult", newResult);
 
             return newResult;
         })
@@ -499,19 +488,10 @@ export function calculateWinner(board: TicTacToeType, turn: number) {
         [0, 4, 8],
         [2, 4, 6],
     ];
-    console.log("turn", turn);
-    console.log("Board", board);
+
     for (let i = 0; i < lines.length; i++) {
         const [a, b, c] = lines[i];
-        console.log();
-        console.log(`a: ${a}\tB: ${b}\tc: ${c}\t`);
-        console.log(
-            `board[a] ${board[a]}\t board[b] ${board[b]}\tboard[c] ${board[c]}`
-        );
-        console.log(
-            "board[a] == turn && board[b] == turn && board[c] == turn",
-            board[a] == turn && board[b] == turn && board[c] == turn
-        );
+
         if (board[a] == turn && board[b] == turn && board[c] == turn) {
             winnerArray.push(a);
             winnerArray.push(b);

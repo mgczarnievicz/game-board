@@ -97,12 +97,6 @@ app.post("/api/registration", (req, res) => {
     // Lets Register!
     registerNewUser(req.body)
         .then((currentUser: UserAlias | boolean) => {
-            // console.log(
-            //     "currentUser:",
-            //     currentUser,
-            //     "\ntypeof currentUser:",
-            //     typeof currentUser
-            // );
             if (typeof currentUser != "boolean") {
                 if (req.session) req.session.userId = currentUser.user_id;
                 res.json({
@@ -132,13 +126,11 @@ app.post("/api/login", (req, res) => {
 
     logInVerify(req.body)
         .then((userLogIn: boolean | LogInUser) => {
-            // console.log("logInVerify Response, userLogIn:", userLogIn);
             if (typeof userLogIn === "boolean") {
                 res.json({
                     status: "Error",
                 });
             } else {
-                // console.log("userLogIn not a boolean");
                 if (req.session) req.session.userId = userLogIn.id;
                 res.json({
                     status: "Success",
@@ -161,7 +153,6 @@ app.get("/api/getUserInfo", (req, res) => {
     //     `------------------------------------------------------------------\n\t Get User Info`
     // );
     getUserInfo(req.session.userId).then((data: UserAlias | boolean) => {
-        // console.log("Data from getUserInfo", data);
         if (typeof data != "boolean") {
             res.json({
                 status: "Success",
@@ -183,7 +174,6 @@ app.get("/api/getPointsTable", (req, res) => {
     // Get data  from in points table.
     getPointsTable()
         .then((result: QueryResult) => {
-            console.log("Points Table query", result.rows);
             res.json({
                 status: "Success",
                 payload: result.rows,
@@ -199,7 +189,6 @@ app.get("/api/getPointsTable", (req, res) => {
 
 app.get("/api/getMatchInfo", (req, res) => {
     getMatchInfoByUse(req.session.userId).then((data: [] | boolean) => {
-        console.log("Data from getUserInfo", data);
         if (typeof data != "boolean") {
             res.json({
                 status: "Success",
@@ -225,7 +214,6 @@ app.post("/api/updateImage", (req, res) => {
     // Get data  from in points table.
     updateImage(req.session.userId, req.body.image_url)
         .then((result: QueryResult) => {
-            console.log("Update Image query", result.rows);
             res.json({
                 status: "Success",
                 payload: result.rows[0],
@@ -269,31 +257,6 @@ interface UserOnline {
 }
 // UsersOnlineInfo;
 const userOnline: UserOnline = {};
-
-/* 
-const CONNECT_4_GAMES = {
-    "23ldfs0l": {
-        players: [{id:7, player: 1}, {id: 11, player: 2}]
-        state: [
-            [0, 0, 1, 0, 2, 0],
-            [0, 0, 1, 0, 2, 0],
-            [0, 0, 1, 0, 2, 0],
-            [0, 0, 1, 0, 2, 0],
-            [1, 0, 1, 0, 2, 0],
-        ]
-    }
-}
-
-UserPlaying{
-    id: number,
-    player:number 1|2
-}
-
-game = {
-    players: Array<>
-    ticTacToe_Board = [[],[],[]]
-}
-*/
 
 /*........................................................................... 
                             GAMES TYPES
@@ -463,9 +426,7 @@ io.on("connection", function (socket: SocketWithSession) {
             player2: { ...inviteMsg.to, symbol: "O", player: 2 },
         };
 
-        // console.log("roomName", roomName);
         socket.join(roomName);
-        // console.log("socket.rooms", socket.rooms);
         io.to(roomName).emit("start-game", message);
     });
 
@@ -562,7 +523,8 @@ io.on("connection", function (socket: SocketWithSession) {
             null,
             null,
         ];
-        socket.to(quiteMsg.room_name).emit("time-out-end-game", response);
+        console.log("response", response);
+        io.to(quiteMsg.room_name).emit("time-out-end-game", response);
         socket.leave(quiteMsg.room_name);
     });
 

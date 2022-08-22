@@ -110,9 +110,6 @@ export function saveGameWin(
     playerA_pts: number,
     playerB_pts: number
 ): Promise<QueryResult<UserAlias>> {
-    console.log(
-        ` playerA_id ${playerA_id},  playerB_id${playerB_id}, gameId ${gameId} winner_id ${winner_id}`
-    );
     const q = `INSERT INTO games (player_A_id, player_B_id, game_id, winner_id, player_A_pts, player_B_pts)
     VALUES ($1, $2, $3, $4, $5, $6 )`;
 
