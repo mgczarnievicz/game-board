@@ -26,15 +26,15 @@ A real-time multiplayer Tic Tac Toe game built as the final project of a 3-month
 
    - Inside the `client` folder:
 
-    ```bash
-        npm run start
-    ```
+      ```bash
+          npm run start
+      ```
 
-    - Inside the `server` folder:
+   - Inside the `server` folder:
 
-        ```bash
-            npx ts-node server.ts
-        ```
+      ```bash
+          npx ts-node server.ts
+      ```
 
 5. Open [localhost:3000](http://localhost:3000) in your browser.
 
